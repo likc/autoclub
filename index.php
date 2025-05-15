@@ -67,7 +67,7 @@
                         <li class="active"><a href="index.php">Início</a></li>
                         <li><a href="#carros">Carros</a></li>
                         <li><a href="#financiamento">Financiamento</a></li>
-                        <li><a href="shaken.html">Shaken</a></li>
+                        <li><a href="shaken.php">Shaken</a></li>
                     </ul>
                 </nav>
                 <div class="header__cta">
@@ -88,7 +88,7 @@
             <li class="active"><a href="index.php">Início</a></li>
             <li><a href="#carros">Carros</a></li>
             <li><a href="#financiamento">Financiamento</a></li>
-            <li><a href="shaken.html">Shaken</a></li>
+            <li><a href="shaken.php">Shaken</a></li>
             <li><a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="btn btn-primary">Agendar Visita</a></li>
         </ul>
     </div>
@@ -211,8 +211,8 @@
                         <p>Oferecemos as melhores condições de financiamento para brasileiros no Japão</p>
                     </div>
                     <div class="about-content mb-4">
-                        <p>Na AutoClub, entendemos as dificuldades que os brasileiros enfrentam para adquirir um veículo no Japão. Por isso, desenvolvemos opções de financiamento flexíveis que se adaptam à sua situação:</p>
-                        
+                        <p>Na AutoClub, entendemos as dificuldades que os brasileiros enfrentam para adquirir um veículo no Japão. <br>Por isso, desenvolvemos opções de financiamento flexíveis que se adaptam à sua situação:</p>
+                        <br>
                         <ul class="about-list">
                             <li><i class="fas fa-check-circle"></i> <strong>Com visto permanente:</strong> Financiamento em até 120x sem entrada</li>
                             <li><i class="fas fa-check-circle"></i> <strong>Com hoshonim:</strong> Aprovação rápida para quem tem um fiador com visto permanente</li>
@@ -224,25 +224,7 @@
                         <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20opções%20de%20financiamento" class="btn btn-primary">Consultar condições de financiamento</a>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="financing-image">
-                        <img src="img/financing.jpg" alt="Financiamento de veículos" class="img-fluid rounded">
-                        <div class="financing-quick-info">
-                            <div class="financing-info-item">
-                                <h4>Até 120x</h4>
-                                <p>para pagamento</p>
-                            </div>
-                            <div class="financing-info-item">
-                                <h4>Sem entrada</h4>
-                                <p>para iniciar</p>
-                            </div>
-                            <div class="financing-info-item">
-                                <h4>48h</h4>
-                                <p>para aprovação</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </section>
@@ -268,14 +250,15 @@
                         <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20vantagens%20de%20ser%20um%20cliente%20premium" class="btn btn-primary">Torne-se um cliente Premium</a>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <!-- VIDEO SOBRE NÓS
+				<div class="col-lg-6">
                     <div class="about-video">
                         <img src="img/about-img.jpg" alt="Vídeo sobre nós">
                         <a href="#" class="play-btn">
                             <i class="fas fa-play"></i>
                         </a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -330,7 +313,7 @@
                             <li><a href="./index.php">Início</a></li>
                             <li><a href="#carros">Carros</a></li>
                             <li><a href="#financiamento">Financiamento</a></li>
-                            <li><a href="shaken.html">Shaken</a></li>
+                            <li><a href="shaken.php">Shaken</a></li>
                         </ul>
                     </div>
                 </div>
@@ -341,7 +324,7 @@
                             <li><a href="#financiamento">Financiamento Japonês</a></li>
                             <li><a href="#financiamento">Financiamento Próprio</a></li>
                             <li><a href="#carros">Leilões de Veículos</a></li>
-                            <li><a href="shaken.html">Serviço de Shaken</a></li>
+                            <li><a href="shaken.php">Serviço de Shaken</a></li>
                         </ul>
                     </div>
                 </div>

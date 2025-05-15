@@ -38,8 +38,8 @@ while ($row = $car_categories_result->fetch_assoc()) {
     $car_categories[] = $row['category_id'];
 }
 
-// Obter todas as categorias
-$categories_query = "SELECT * FROM car_categories WHERE slug != 'all' ORDER BY name ASC";
+// Obter categorias específicas (apenas Kei e Placa Branca)
+$categories_query = "SELECT * FROM car_categories WHERE slug IN ('kei', 'placa-branca') ORDER BY name ASC";
 $categories = $conn->query($categories_query)->fetch_all(MYSQLI_ASSOC);
 
 // Processar o formulário quando enviado
@@ -111,9 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($upload_result['success']) {
                     $image_filename = $upload_result['filename'];
                     
-                    // Remover a imagem antiga
-                    if (file_exists("uploads/" . $car['image']) && $car['image'] != $image_filename) {
-                        unlink("uploads/" . $car['image']);
+                    // Remover a imagem antiga sempre que uma nova for carregada
+                    $old_image_path = "uploads/" . $car['image'];
+                    if (file_exists($old_image_path) && $car['image'] !== $image_filename) {
+                        if (!unlink($old_image_path)) {
+                            error_log("Erro ao excluir imagem antiga: " . $old_image_path);
+                        }
                     }
                 } else {
                     $errors[] = "Erro ao fazer upload da imagem: " . $upload_result['message'];
@@ -255,6 +258,7 @@ $conn->close();
                                         <label for="installment_type">Tipo de Parcelamento*</label>
                                         <select class="form-control" id="installment_type" name="installment_type" required>
                                             <option value="">Selecione</option>
+                                            <option value="64x" <?php echo ($car['installment_type'] == '64x') ? 'selected' : ''; ?>>Até 64x</option>
                                             <option value="84x" <?php echo ($car['installment_type'] == '84x') ? 'selected' : ''; ?>>Até 84x</option>
                                             <option value="120x" <?php echo ($car['installment_type'] == '120x') ? 'selected' : ''; ?>>Até 120x</option>
                                         </select>
@@ -267,12 +271,6 @@ $conn->close();
                                     
                                     <div class="form-group">
                                         <label>Categorias*</label>
-                                        <div class="select-all mb-2">
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" id="select_all_categories">
-                                                <label for="select_all_categories">Selecionar todas</label>
-                                            </div>
-                                        </div>
                                         <?php foreach ($categories as $category): ?>
                                             <div class="icheck-primary">
                                                 <input type="checkbox" name="categories[]" id="category_<?php echo $category['id']; ?>" value="<?php echo $category['id']; ?>" class="category-checkbox" <?php echo (in_array($category['id'], $car_categories)) ? 'checked' : ''; ?>>
@@ -360,20 +358,11 @@ $conn->close();
             }
         });
         
-        // Selecionar/desmarcar todas as categorias
-        const selectAllCheckbox = document.getElementById('select_all_categories');
+        // Remover lógica de selecionar todas as categorias
         const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-        
-        selectAllCheckbox.addEventListener('change', function() {
-            categoryCheckboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-        
         // Verificar se todas as categorias estão selecionadas
         function checkAllSelected() {
             const allChecked = Array.from(categoryCheckboxes).every(checkbox => checkbox.checked);
-            selectAllCheckbox.checked = allChecked;
         }
         
         categoryCheckboxes.forEach(checkbox => {
@@ -393,7 +382,12 @@ $conn->close();
             const installmentType = installmentTypeSelect.value;
             
             if (price > 0 && installmentType) {
-                const months = installmentType === '84x' ? 84 : 120;
+                let months = 84;
+                if (installmentType === '64x') {
+                    months = 64;
+                } else if (installmentType === '120x') {
+                    months = 120;
+                }
                 const monthlyPayment = Math.ceil(price / months);
                 monthlyPaymentInput.value = monthlyPayment;
             }
@@ -404,4 +398,4 @@ $conn->close();
     });
 </script>
 
-<?php include 'includes/footer.php';
+<?php include 'includes/footer.php'; ?>

@@ -154,11 +154,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                 <p>Categorias</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="settings.php" class="nav-link <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
+                        <li class="nav-item <?php echo in_array($current_page, ['settings.php', 'site_settings.php']) ? 'menu-open' : ''; ?>">
+                            <a href="#" class="nav-link <?php echo in_array($current_page, ['settings.php', 'site_settings.php']) ? 'active' : ''; ?>">
                                 <i class="nav-icon fas fa-cog"></i>
-                                <p>Configurações</p>
+                                <p>
+                                    Configurações
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="settings.php" class="nav-link <?php echo $current_page == 'settings.php' ? 'active' : ''; ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Meu Perfil</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="site_settings.php" class="nav-link <?php echo $current_page == 'site_settings.php' ? 'active' : ''; ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Configurações do Site</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
