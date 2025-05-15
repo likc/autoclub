@@ -123,7 +123,7 @@ require_once 'load_site_config.php';
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
                     <div class="service-card">
-                        <img src="img/services/auction.png" alt="Financiamento Japonês" class="service-card__icon">
+                        <img src="img/services/1.png" alt="Financiamento Japonês" class="service-card__icon">
                         <h3>Financiamento Japonês</h3>
                         <p>Financiamento com visto permanente ou um Hoshonim com visto permanente em até 120x sem entrada. Financiamento sem visto permanente em até 84x sem entrada.</p>
                         <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20financiamento%20japonês" class="btn-link">

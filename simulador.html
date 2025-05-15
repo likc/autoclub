@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Financiamento - AutoClub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d69c1e;
+            --primary-light: #e6ae30;
+            --dark: #151515;
+            --dark-medium: #222222;
+            --light: #ffffff;
+            --success: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .simulator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .simulator-card {
+            background: rgba(34, 34, 34, 0.9);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .simulator-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .simulator-header h1 {
+            font-size: 36px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .simulator-header p {
+            font-size: 18px;
+            color: #aaa;
+        }
+        
+        .simulator-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .input-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(214, 156, 30, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--light);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(214, 156, 30, 0.2);
+        }
+        
+        .range-slider {
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        .range-value {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .results-section {
+            background: linear-gradient(135deg, rgba(214, 156, 30, 0.1), rgba(0, 0, 0, 0.3));
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid rgba(214, 156, 30, 0.3);
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(214, 156, 30, 0.2);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            font-weight: 500;
+            color: #aaa;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--light);
+        }
+        
+        .result-value.primary {
+            color: var(--primary);
+            font-size: 32px;
+        }
+        
+        .info-box {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: var(--success);
+            font-size: 14px;
+        }
+        
+        .btn-calculate {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn-calculate:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(214, 156, 30, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .simulator-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="simulator-container">
+        <div class="simulator-card">
+            <div class="simulator-header">
+                <h1>Simulador de Financiamento</h1>
+                <p>Calcule as parcelas do seu próximo veículo</p>
+            </div>
+            
+            <div class="simulator-content">
+                <div class="input-section">
+                    <h3>Dados do Financiamento</h3>
+                    
+                    <div class="form-group">
+                        <label for="carValue">Valor do Veículo (¥)</label>
+                        <input type="number" id="carValue" placeholder="Ex: 1.500.000" value="1500000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="downPayment">Entrada (¥)</label>
+                        <input type="number" id="downPayment" placeholder="Ex: 300.000" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="installments">Número de Parcelas</label>
+                        <select id="installments">
+                            <option value="64">64x</option>
+                            <option value="84" selected>84x</option>
+                            <option value="120">120x</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="interestRate">Taxa de Juros (% ao ano)</label>
+                        <input type="range" id="interestRate" min="0" max="15" step="0.1" value="5.9" class="range-slider">
+                        <div class="range-value">
+                            <span>0%</span>
+                            <span id="rateDisplay">5.9%</span>
+                            <span>15%</span>
+                        </div>
+                    </div>
+                    
+                    
+                    <button class="btn-calculate" onclick="calculateFinancing()">
+                        <i class="fas fa-calculator"></i> Calcular Financiamento
+                    </button>
+                </div>
+                
+                <div class="results-section">
+                    <h3>Resultado da Simulação</h3>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Valor Financiado</span>
+                        <span class="result-value" id="financedAmount">¥0</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Parcela Mensal</span>
+                        <span class="result-value primary" id="monthlyPayment">¥0</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Total de Juros</span>
+                        <span class="result-value" id="totalInterest">¥0</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span class="result-label">Valor Total</span>
+                        <span class="result-value" id="totalAmount">¥0</span>
+                    </div>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> Esta é uma simulação. Valores reais podem variar de acordo com análise de crédito.</p>
+                    </div>
+                    
+                    <button class="btn-calculate" style="background: var(--success);" onclick="requestQuote()">
+                        <i class="fab fa-whatsapp"></i> Solicitar Proposta Real
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Atualizar display da taxa de juros
+        document.getElementById('interestRate').addEventListener('input', function() {
+            document.getElementById('rateDisplay').textContent = this.value + '%';
+        });
+        
+        function calculateFinancing() {
+            // Obter valores do formulário
+            const carValue = parseFloat(document.getElementById('carValue').value) || 0;
+            const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
+            const installments = parseInt(document.getElementById('installments').value);
+            const annualRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const monthlyRate = annualRate / 12;
+            
+            // Calcular valor financiado
+            const financedAmount = carValue - downPayment;
+            
+            // Calcular parcela mensal (fórmula de financiamento)
+            let monthlyPayment;
+            if (monthlyRate === 0) {
+                monthlyPayment = financedAmount / installments;
+            } else {
+                monthlyPayment = financedAmount * (monthlyRate * Math.pow(1 + monthlyRate, installments)) / 
+                                 (Math.pow(1 + monthlyRate, installments) - 1);
+            }
+            
+            // Calcular totais
+            const totalAmount = monthlyPayment * installments;
+            const totalInterest = totalAmount - financedAmount;
+            
+            // Formatar e exibir resultados
+            document.getElementById('financedAmount').textContent = '¥' + formatNumber(financedAmount);
+            document.getElementById('monthlyPayment').textContent = '¥' + formatNumber(Math.round(monthlyPayment));
+            document.getElementById('totalInterest').textContent = '¥' + formatNumber(Math.round(totalInterest));
+            document.getElementById('totalAmount').textContent = '¥' + formatNumber(Math.round(totalAmount));
+        }
+        
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        
+        function requestQuote() {
+            const carValue = document.getElementById('carValue').value;
+            const installments = document.getElementById('installments').value;
+            const monthlyPayment = document.getElementById('monthlyPayment').textContent;
+            
+            const message = `Olá! Fiz uma simulação no site para um veículo de ¥${formatNumber(carValue)} em ${installments}x. A parcela simulada foi ${monthlyPayment}. Gostaria de uma proposta real!`;
+            
+            window.open(`https://wa.me/+818092815155?text=${encodeURIComponent(message)}`, '_blank');
+        }
+        
+        // Calcular ao carregar a página
+        calculateFinancing();
+    </script>
+</body>
+</html>

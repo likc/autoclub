@@ -150,7 +150,9 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="service-card animate-on-scroll">
-                        <img src="img/services/inspection.png" alt="Inspeção Completa" class="service-card__icon">
+                        <div class="service-card__icon fa-icon-wrapper">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
                         <h3>Inspeção Completa</h3>
                         <p>Realizamos uma inspeção detalhada para identificar qualquer problema que possa causar reprovação no Shaken. Avaliamos mais de 100 itens do veículo, incluindo sistema de freios, suspensão, emissão de gases, iluminação e muito mais.</p>
                         <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20inspeção%20para%20Shaken" class="btn-link">
@@ -161,7 +163,9 @@
                 
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="service-card animate-on-scroll">
-                        <img src="img/services/repair.png" alt="Consultoria Técnica" class="service-card__icon">
+                        <div class="service-card__icon fa-icon-wrapper">
+                            <i class="fas fa-tools"></i>
+                        </div>
                         <h3>Consultoria Técnica</h3>
                         <p>Identificamos todos os itens que precisam estar em conformidade para aprovação no Shaken. Fornecemos um relatório detalhado e recomendamos oficinas parceiras caso reparos sejam necessários, sempre com transparência e os melhores preços.</p>
                         <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20consultoria%20técnica%20para%20Shaken" class="btn-link">
@@ -172,7 +176,9 @@
                 
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="service-card animate-on-scroll">
-                        <img src="img/services/document.png" alt="Documentação Completa" class="service-card__icon">
+                        <div class="service-card__icon fa-icon-wrapper">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
                         <h3>Documentação Completa</h3>
                         <p>Cuidamos de toda a burocracia do processo de Shaken. Preparamos e submetemos todos os documentos necessários, pagamos as taxas governamentais e impostos relacionados, e garantimos que tudo esteja em conformidade com as exigências japonesas.</p>
                         <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20documentação%20do%20Shaken" class="btn-link">
@@ -400,5 +406,49 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/shaken-main.js"></script>
+    
+    <!-- CSS para os ícones Font Awesome -->
+    <style>
+    .service-card__icon.fa-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: rgba(214, 156, 30, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(214, 156, 30, 0.2);
+    }
+
+    .service-card__icon.fa-icon-wrapper i {
+        font-size: 36px;
+        color: var(--primary);
+        transition: all 0.3s ease;
+    }
+
+    .service-card:hover .service-card__icon.fa-icon-wrapper {
+        background: var(--primary);
+        transform: scale(1.1) rotate(5deg);
+        border-color: var(--primary);
+        box-shadow: 0 10px 20px rgba(214, 156, 30, 0.3);
+    }
+
+    .service-card:hover .service-card__icon.fa-icon-wrapper i {
+        color: var(--light);
+    }
+
+    /* Animação extra para os ícones */
+    @keyframes iconPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .service-card:hover .service-card__icon.fa-icon-wrapper {
+        animation: iconPulse 1s ease-in-out infinite;
+    }
+    </style>
 </body>
 </html>
