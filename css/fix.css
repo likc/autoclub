@@ -301,3 +301,192 @@ img[src$="car-default.jpg"] {
         height: 150px;
     }
 }
+
+/* CSS completo para melhorar a apresentação da imagem de Shaken */
+
+/* Reset e correção principal para a imagem */
+.about-image {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(214, 156, 30, 0.3);
+    transition: all 0.3s ease;
+    background: rgba(34, 34, 34, 0.5);
+    /* Correção para garantir bordas arredondadas uniformes */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(white, black);
+}
+
+/* Imagem dentro do container */
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+    /* Remove qualquer border-radius da imagem */
+    border-radius: 0;
+}
+
+/* Efeito hover */
+.about-image:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    border-color: var(--primary);
+}
+
+.about-image:hover img {
+    transform: scale(1.05);
+}
+
+/* Overlay gradiente sutil (opcional) */
+.about-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(214, 156, 30, 0.1) 0%, 
+        transparent 50%, 
+        rgba(0, 0, 0, 0.2) 100%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.about-image:hover::before {
+    opacity: 1;
+}
+
+/* Badge/Label opcional */
+.about-image::after {
+    content: 'Shaken Center';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary);
+    color: var(--light);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    z-index: 2;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.about-image:hover::after {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Container da seção */
+.about-section .about-image {
+    margin: 20px 0;
+}
+
+/* Animação de entrada */
+.about-image.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.about-image.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Keyframe para animação */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .about-image {
+        border-radius: 12px;
+        border-width: 2px;
+        margin: 15px 0;
+    }
+    
+    .about-image::after {
+        font-size: 12px;
+        padding: 6px 16px;
+        top: 15px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-image {
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        margin-bottom: 30px;
+    }
+    
+    /* Remove o badge em mobile para não poluir */
+    .about-image::after {
+        display: none;
+    }
+    
+    .about-image:hover {
+        transform: translateY(-5px);
+    }
+}
+
+@media (max-width: 576px) {
+    .about-image {
+        border-radius: 8px;
+        border-width: 1px;
+    }
+}
+
+/* Variações de estilo (opcional) */
+
+/* Estilo minimalista */
+.about-image.minimal {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo destaque */
+.about-image.highlight {
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 0 1px rgba(214, 156, 30, 0.2),
+                0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo polaroid */
+.about-image.polaroid {
+    background: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.about-image.polaroid img {
+    border-radius: 2px;
+}
+
+/* Fix para Safari */
+@supports (-webkit-appearance: none) {
+    .about-image {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
