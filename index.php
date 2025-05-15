@@ -4,47 +4,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-
-<style>
-/* Estilos de emergência para o carrossel */
-.car-grid {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 30px !important;
-}
-
-.car-item {
-  transition: all 0.3s ease;
-}
-
-/* Melhorar a aparência da mensagem "nenhum carro encontrado" */
-.no-cars-found {
-  background: rgba(34, 34, 34, 0.8);
-  border-radius: 8px;
-  border: 1px solid #d69c1e;
-  padding: 20px;
-  text-align: center;
-  width: 100%;
-  margin: 30px 0;
-}
-
-.no-cars-found p {
-  color: #fff;
-  font-size: 18px;
-  margin: 0;
-}
-
-/* Garantir que as linhas do grid tenham altura adequada quando vazias */
-.car-grid:empty {
-  display: none;
-}
-
-/* Correção para os botões de filtro */
-.car-filter-btn.active {
-  background-color: #d69c1e !important;
-  color: #fff !important;
-}
-</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoClub - Seu sonho automotivo realizado no Japão</title>
@@ -70,12 +29,7 @@
     <!-- CSS Principal -->
     <link rel="stylesheet" href="css/css-variables.css">
     <link rel="stylesheet" href="css/optimized.css">
-    
-	    <link rel="stylesheet" href="css/fix-carousel-layout.css">
-		
-    <!-- Slick Slider CSS (para páginas com slider) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <link rel="stylesheet" href="css/fix-carousel-layout.css">
 </head>
 <body>
     
@@ -114,8 +68,6 @@
                         <li><a href="#carros">Carros</a></li>
                         <li><a href="#financiamento">Financiamento</a></li>
                         <li><a href="shaken.html">Shaken</a></li>
-                       <!-- <li><a href="sobre.html">Sobre Nós</a></li> 
-                        <li><a href="contato.html">Contato</a></li>-->
                     </ul>
                 </nav>
                 <div class="header__cta">
@@ -137,8 +89,6 @@
             <li><a href="#carros">Carros</a></li>
             <li><a href="#financiamento">Financiamento</a></li>
             <li><a href="shaken.html">Shaken</a></li>
-           <!-- <li><a href="sobre.html">Sobre Nós</a></li>
-            <li><a href="contato.html">Contato</a></li> -->
             <li><a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="btn btn-primary">Agendar Visita</a></li>
         </ul>
     </div>
@@ -213,42 +163,42 @@
         </div>
     </section>
 
-<!-- Car Section (Layout de 2 andares) -->
-<section id="carros" class="section-padding">
-    <div class="container">
-        <div class="section-title">
-            <span>NOSSOS CARROS</span>
-            <h2>Veículos Disponíveis</h2>
-            <p>Uma seleção premium de veículos para todos os gostos e necessidades</p>
-        </div>
-        
-        <!-- Filtros de Carros -->
-        <div class="car-filters">
-            <button class="car-filter-btn active" data-filter="all">Todos</button>
-            <button class="car-filter-btn" data-filter="placa-branca">Placa Branca</button>
-            <button class="car-filter-btn" data-filter="kei">Kei</button>
-        </div>
-        
-        <?php include 'show_cars.php'; ?>
+    <!-- Car Section (Layout de 2 andares) -->
+    <section id="carros" class="section-padding">
+        <div class="container">
+            <div class="section-title">
+                <span>NOSSOS CARROS</span>
+                <h2>Veículos Disponíveis</h2>
+                <p>Uma seleção premium de veículos para todos os gostos e necessidades</p>
+            </div>
+            
+            <!-- Filtros de Carros -->
+            <div class="car-filters">
+                <button class="car-filter-btn active" data-filter="all">Todos</button>
+                <button class="car-filter-btn" data-filter="placa-branca">Placa Branca</button>
+                <button class="car-filter-btn" data-filter="kei">Kei</button>
+            </div>
+            
+            <?php include 'show_cars.php'; ?>
 
-        <!-- Seção Não Achou o Carro -->
-        <div class="not-found-car-section mt-5">
-            <div class="row align-items-center">
-                <div class="col-lg-8 col-md-8">
-                    <div class="not-found-content">
-                        <h2>Não achou o carro dos seus sonhos?</h2>
-                        <p>Entre em contato e conte para nós o que você está procurando.</p>
+            <!-- Seção Não Achou o Carro -->
+            <div class="not-found-car-section mt-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="not-found-content">
+                            <h2>Não achou o carro dos seus sonhos?</h2>
+                            <p>Entre em contato e conte para nós o que você está procurando.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-4 text-right">
-                    <div class="not-found-buttons">
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20estou%20procurando%20um%20carro%20específico" class="btn btn-primary">Fale conosco!</a>
+                    <div class="col-lg-4 col-md-4 text-right">
+                        <div class="not-found-buttons">
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20estou%20procurando%20um%20carro%20específico" class="btn btn-primary">Fale conosco!</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Seção de Financiamento -->
     <section id="financiamento" class="section-padding" style="background-color: var(--dark-medium);">
@@ -381,8 +331,6 @@
                             <li><a href="#carros">Carros</a></li>
                             <li><a href="#financiamento">Financiamento</a></li>
                             <li><a href="shaken.html">Shaken</a></li>
-                           <!-- <li><a href="sobre.html">Sobre Nós</a></li> 
-                            <li><a href="contato.html">Contato</a></li>-->
                         </ul>
                     </div>
                 </div>
@@ -426,128 +374,8 @@
         </div>
     </footer>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<script src="js/main-updated.js"></script>
-<script src="js/unified-carousel.js"></script>
-
-<script>
-$(document).ready(function() {
-    // Solução para reorganizar carros ao filtrar
-    
-    // Guardar referência ao container principal
-    const $container = $('.simple-car-slider .slides-container');
-    
-    // Clonar todos os itens originais
-    const $allItems = $('.car-item').clone(true);
-    
-    $('.car-filter-btn').off('click').on('click', function() {
-        // Atualizar botões
-        $('.car-filter-btn').removeClass('active');
-        $(this).addClass('active');
-        
-        const filter = $(this).data('filter');
-        
-        // Coletar items filtrados
-        let $itemsToShow;
-        
-        if (filter === 'all') {
-            $itemsToShow = $allItems.clone();
-        } else {
-            $itemsToShow = $allItems.filter(`[data-category*="${filter}"]`).clone();
-        }
-        
-        // Limpar o container
-        $container.empty();
-        
-        // Se não houver itens, mostrar mensagem
-        if ($itemsToShow.length === 0) {
-            $container.html('<div class="no-cars-found text-center p-5"><p>Nenhum carro encontrado nesta categoria.</p></div>');
-            return;
-        }
-        
-        // Criar novo slide
-        const $newSlide = $('<div class="car-slide active" data-slide="1"></div>');
-        
-        // Criar grids e distribuir os itens
-        let $currentGrid = $('<div class="car-grid row"></div>');
-        let itemCount = 0;
-        
-        $itemsToShow.each(function(index) {
-            // Adicionar item ao grid atual
-            $currentGrid.append($(this));
-            itemCount++;
-            
-            // Se completou 4 itens, criar novo grid
-            if (itemCount === 4 && index < $itemsToShow.length - 1) {
-                $newSlide.append($currentGrid);
-                $currentGrid = $('<div class="car-grid row mt-4"></div>');
-                itemCount = 0;
-            }
-        });
-        
-        // Adicionar o último grid se tiver itens
-        if (itemCount > 0) {
-            $newSlide.append($currentGrid);
-        }
-        
-        // Adicionar o slide ao container
-        $container.html($newSlide);
-        
-        // Recriar a navegação se necessário
-        if ($itemsToShow.length > 8) {
-            $('.arrow-nav').prop('disabled', false);
-        } else {
-            $('.arrow-nav').prop('disabled', true);
-        }
-    });
-});
-</script>
-
-<style>
-/* CSS para garantir que o layout funcione corretamente */
-.car-grid {
-    display: flex !important;
-    flex-wrap: wrap !important;
-}
-
-.car-item {
-    flex: 0 0 25% !important;
-    max-width: 25% !important;
-    padding: 0 15px !important;
-    margin-bottom: 30px !important;
-}
-
-/* Responsivo */
-@media (max-width: 991px) {
-    .car-item {
-        flex: 0 0 33.333% !important;
-        max-width: 33.333% !important;
-    }
-}
-
-@media (max-width: 767px) {
-    .car-item {
-        flex: 0 0 50% !important;
-        max-width: 50% !important;
-    }
-}
-
-@media (max-width: 575px) {
-    .car-item {
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-    }
-}
-
-.no-cars-found {
-    width: 100%;
-    text-align: center;
-    padding: 60px 20px;
-    color: #888;
-    font-size: 18px;
-}
-</style>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/index-main.js"></script>
 </body>
 </html>
