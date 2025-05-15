@@ -1,0 +1,2060 @@
+/* 
+   AutoClub Website - CSS Otimizado
+   Versão: 1.1
+   Descrição: Arquivo CSS unificado com melhorias de compatibilidade e performance
+*/
+
+/* ============================
+    VARIÁVEIS & RESET
+=============================== */
+:root {
+    --primary: #d69c1e;
+    --primary-light: #e6ae30;
+    --primary-dark: #b48218;
+    --dark: #151515;
+    --dark-medium: #222222;
+    --dark-light: #333333;
+    --light: #ffffff;
+    --light-medium: #f0f0f0;
+    --light-dark: #d0d0d0;
+    --accent: #ff5500;
+    --success: #2ecc71;
+    --error: #e74c3c;
+    --gray: #727171;
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+    --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --padding-section: 100px 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', 'Lato', sans-serif;
+    background-color: var(--dark-light);
+    color: var(--light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-light);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+ul, ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ============================
+    GRID SYSTEM & UTILS
+=============================== */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+[class*="col-"] {
+    padding: 0 15px;
+}
+
+.col-lg-2 { flex: 0 0 16.67%; max-width: 16.67%; }
+.col-lg-3 { flex: 0 0 25%; max-width: 25%; }
+.col-lg-4 { flex: 0 0 33.33%; max-width: 33.33%; }
+.col-lg-5 { flex: 0 0 41.67%; max-width: 41.67%; }
+.col-lg-6 { flex: 0 0 50%; max-width: 50%; }
+.col-lg-7 { flex: 0 0 58.33%; max-width: 58.33%; }
+.col-lg-8 { flex: 0 0 66.67%; max-width: 66.67%; }
+.col-lg-9 { flex: 0 0 75%; max-width: 75%; }
+.col-lg-10 { flex: 0 0 83.33%; max-width: 83.33%; }
+.col-lg-12 { flex: 0 0 100%; max-width: 100%; }
+
+@media (max-width: 992px) {
+    .col-md-4 { flex: 0 0 33.33%; max-width: 33.33%; }
+    .col-md-6 { flex: 0 0 50%; max-width: 50%; }
+    .col-md-8 { flex: 0 0 66.67%; max-width: 66.67%; }
+    .col-md-12 { flex: 0 0 100%; max-width: 100%; }
+    [class*="col-lg-"] { flex: 0 0 100%; max-width: 100%; }
+}
+
+@media (max-width: 768px) {
+    .col-sm-6 { flex: 0 0 50%; max-width: 50%; }
+    .col-sm-12 { flex: 0 0 100%; max-width: 100%; }
+    [class*="col-md-"] { flex: 0 0 100%; max-width: 100%; }
+}
+
+@media (max-width: 576px) {
+    [class*="col-sm-"] { flex: 0 0 100%; max-width: 100%; }
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+.d-flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.justify-content-between { justify-content: space-between; }
+.justify-content-center { justify-content: center; }
+.align-items-center { align-items: center; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+.ml-2 { margin-left: 0.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+.p-0 { padding: 0; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 1.5rem; }
+.p-5 { padding: 3rem; }
+.w-100 { width: 100%; }
+.img-fluid { max-width: 100%; height: auto; }
+.rounded { border-radius: var(--border-radius); }
+
+/* ============================
+    COMPONENTES
+=============================== */
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--light);
+}
+
+.btn-primary:hover {
+    background: var(--primary-light);
+    color: var(--light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--light);
+    border: 2px solid var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: var(--light);
+    transform: translateY(-3px);
+}
+
+.btn-white {
+    background: var(--light);
+    color: var(--primary);
+}
+
+.btn-white:hover {
+    background: var(--light-medium);
+    color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.btn-lg {
+    padding: 14px 32px;
+    font-size: 18px;
+}
+
+.btn-sm {
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.btn-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 5px 15px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.badge-primary {
+    background: var(--primary);
+    color: var(--light);
+}
+
+.badge-success {
+    background: var(--success);
+    color: var(--light);
+}
+
+.badge-danger {
+    background: var(--error);
+    color: var(--light);
+}
+
+/* Section Styling */
+.section-padding {
+    padding: var(--padding-section);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title span {
+    font-size: 16px;
+    color: var(--primary);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.section-title h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.section-title h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--primary);
+}
+
+.section-title p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--light-dark);
+}
+
+.section-title.text-left {
+    text-align: left;
+}
+
+.section-title.text-left h2:after {
+    left: 0;
+    transform: none;
+}
+
+/* Cards */
+.card {
+    background: rgba(34, 34, 34, 0.5);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid rgba(214, 156, 30, 0.1);
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* ============================
+    HEADER & NAVIGATION
+=============================== */
+.header {
+    position: absolute;
+    width: 100%;
+    z-index: 999;
+    padding: 20px 0;
+    transition: var(--transition);
+}
+
+.header.sticky {
+    position: fixed;
+    top: 0;
+    background: rgba(21, 21, 21, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    backdrop-filter: blur(10px);
+}
+
+.header__top {
+    background: var(--primary);
+    padding: 10px 0;
+}
+
+.header__top a {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.header__top a:hover {
+    color: var(--light);
+}
+
+.header__top__info {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.header__top__info li {
+    margin-right: 20px;
+    font-size: 14px;
+    color: var(--dark);
+}
+
+.header__top__info li i {
+    margin-right: 8px;
+}
+
+.header__top__social {
+    display: flex;
+}
+
+.header__top__social a {
+    margin-left: 15px;
+    font-size: 14px;
+}
+
+.header__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header__logo img {
+    max-height: 60px;
+}
+
+.header__menu {
+    display: flex;
+    align-items: center;
+}
+
+.header__menu ul {
+    display: flex;
+}
+
+.header__menu ul li {
+    margin: 0 15px;
+    position: relative;
+}
+
+.header__menu ul li a {
+    color: var(--light);
+    font-weight: 500;
+    padding: 10px 0;
+    display: block;
+    position: relative;
+}
+
+.header__menu ul li a:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: var(--transition);
+}
+
+.header__menu ul li:hover a:after,
+.header__menu ul li.active a:after {
+    width: 100%;
+}
+
+.header__cta {
+    margin-left: 20px;
+}
+
+/* Mobile Menu */
+.mobile-menu-toggle {
+    display: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    z-index: 1000;
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--light);
+    margin: 6px 0;
+    transition: var(--transition);
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 400px;
+    height: 100vh;
+    background: var(--dark);
+    z-index: 999;
+    padding: 80px 40px 40px;
+    transition: all 0.4s ease-in-out;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu ul li {
+    margin-bottom: 20px;
+}
+
+.mobile-menu ul li a {
+    color: var(--light);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.mobile-menu ul li a:hover {
+    color: var(--primary);
+}
+
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 992px) {
+    .header__menu {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .header__top__info li {
+        margin-right: 15px;
+        font-size: 12px;
+    }
+}
+
+/* ============================
+    HERO SECTION
+=============================== */
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.hero:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
+    z-index: 1;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero__content {
+    max-width: 650px;
+}
+
+.hero__content h1 {
+    font-size: 56px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    line-height: 1.2;
+}
+
+.hero__content p {
+    font-size: 18px;
+    margin-bottom: 40px;
+    color: var(--light-medium);
+}
+
+.hero__buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 992px) {
+    .hero {
+        height: auto;
+        padding: 150px 0 100px;
+    }
+    
+    .hero__content h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero__content h1 {
+        font-size: 36px;
+    }
+    
+    .hero__content p {
+        font-size: 16px;
+    }
+}
+
+/* ============================
+    SERVICE CARDS
+=============================== */
+.service-card {
+    text-align: center;
+    padding: 40px 30px;
+    border-radius: var(--border-radius);
+    background: rgba(34, 34, 34, 0.6);
+    transition: var(--transition);
+    height: 100%;
+    border: 1px solid rgba(214, 156, 30, 0.1);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    background: rgba(34, 34, 34, 0.8);
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.service-card__icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 25px;
+    transition: var(--transition);
+}
+
+.service-card:hover .service-card__icon {
+    transform: scale(1.1);
+}
+
+.service-card h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.service-card p {
+    margin-bottom: 20px;
+    color: var(--light-dark);
+}
+
+.service-card .btn-link {
+    color: var(--primary);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.service-card .btn-link:hover {
+    color: var(--primary-light);
+}
+
+/* ============================
+    CAR CARDS & FILTERS
+=============================== */
+.car-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.car-filter-btn {
+    padding: 8px 20px;
+    background: transparent;
+    border: none;
+    color: var(--light-dark);
+    cursor: pointer;
+    font-weight: 500;
+    border-radius: 30px;
+    transition: var(--transition);
+}
+
+.car-filter-btn:hover,
+.car-filter-btn.active {
+    background: var(--primary);
+    color: var(--light);
+}
+
+.car-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: rgba(34, 34, 34, 0.6);
+    transition: var(--transition);
+    height: 100%;
+    border: 1px solid rgba(214, 156, 30, 0.1);
+    position: relative;
+}
+
+.car-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.car-card__badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 2;
+}
+
+.car-card__image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.car-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.car-card:hover .car-card__image img {
+    transform: scale(1.05);
+}
+
+.car-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.car-card:hover .car-card__overlay {
+    opacity: 1;
+}
+
+.car-card__content {
+    padding: 25px;
+}
+
+.car-card__year {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.car-card__title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.car-card__specs {
+    margin: 0 0 20px;
+    border-bottom: 1px solid rgba(214, 156, 30, 0.1);
+    padding-bottom: 20px;
+}
+
+.car-card__specs li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: var(--light-dark);
+}
+
+.car-card__specs li i {
+    color: var(--primary);
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.car-card__specs li span {
+    color: var(--light);
+    font-weight: 500;
+}
+
+.car-card__price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.car-card__price-badge {
+    background: var(--accent);
+    color: var(--light);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.car-card__price-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.car-card__price-amount small {
+    font-size: 14px;
+    color: var(--light-dark);
+    font-weight: 400;
+}
+
+/* ============================
+    CAROUSEL COMPONENTS
+=============================== */
+/* Carrossel com 2 andares */
+.simple-car-slider {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.slides-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.car-slide {
+    width: 100%;
+    display: none;
+    transition: opacity 0.3s ease;
+}
+
+.car-slide.active {
+    display: block;
+}
+
+.simple-slider-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.arrow-nav {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: var(--light);
+    border: none;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    margin: 0 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.arrow-nav:hover:not(:disabled) {
+    background-color: var(--primary-light);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+.arrow-nav:disabled {
+    background-color: var(--dark-light);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.slider-indicators {
+    display: flex;
+    gap: 10px;
+}
+
+.indicator {
+    width: 14px;
+    height: 14px;
+    background-color: rgba(214, 156, 30, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.indicator.active {
+    background-color: var(--primary);
+    transform: scale(1.2);
+}
+
+.car-grid + .car-grid {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(214, 156, 30, 0.1);
+}
+
+/* "Não achou o carro" section */
+.not-found-car-section {
+    background: rgba(34, 34, 34, 0.6);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    border: 1px solid rgba(214, 156, 30, 0.1);
+    margin-top: 50px;
+}
+
+.not-found-content h2 {
+    font-size: 28px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.not-found-content p {
+    color: var(--light);
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.not-found-buttons {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ============================
+    ABOUT SECTION
+=============================== */
+.about-section {
+    position: relative;
+}
+
+.about-content {
+    padding-right: 40px;
+}
+
+.about-list {
+    margin: 0 0 30px;
+}
+
+.about-list li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    color: var(--light-medium);
+}
+
+.about-list li i {
+    color: var(--primary);
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+.about-image {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ============================
+    CTA SECTION
+=============================== */
+.cta-section {
+    background: var(--primary);
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
+}
+
+.cta-content h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: var(--dark);
+}
+
+.cta-content p {
+    color: var(--dark);
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+/* ============================
+    FOOTER
+=============================== */
+.footer {
+    background: var(--dark-medium);
+    padding: 80px 0 30px;
+    position: relative;
+}
+
+.footer-top {
+    padding-bottom: 50px;
+    margin-bottom: 50px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-contact h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.footer-contact-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--primary);
+    color: var(--light);
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.footer-contact-btn:hover {
+    background: var(--primary-light);
+    color: var(--light);
+    transform: translateY(-3px);
+}
+
+.footer-widget {
+    margin-bottom: 30px;
+}
+
+.footer-widget h3 {
+    font-size: 20px;
+    color: var(--primary);
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-widget h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--primary);
+}
+
+.footer-widget ul li {
+    margin-bottom: 12px;
+}
+
+.footer-widget ul li a {
+    color: var(--light-dark);
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.footer-widget ul li a:hover {
+    color: var(--primary);
+    padding-left: 5px;
+}
+
+.footer-widget .contact-info li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    color: var(--light-dark);
+}
+
+.footer-widget .contact-info li i {
+    color: var(--primary);
+    margin-right: 10px;
+    margin-top: 5px;
+    width: 20px;
+    text-align: center;
+}
+
+.footer-social {
+    display: flex;
+    gap: 10px;
+}
+
+.footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(214, 156, 30, 0.1);
+    color: var(--primary);
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.footer-social a:hover {
+    background: var(--primary);
+    color: var(--light);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    color: var(--light-dark);
+    font-size: 14px;
+}
+
+/* ============================
+    FLOATING ELEMENTS
+=============================== */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99;
+}
+
+.whatsapp-float a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #25d366;
+    color: var(--light);
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: var(--transition);
+}
+
+.whatsapp-float a:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-float i {
+    font-size: 24px;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    background: rgba(214, 156, 30, 0.7);
+    color: var(--light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 99;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
+}
+
+/* ============================
+    PÁGINA DE CARROS DETALHES
+=============================== */
+.car-detail-gallery {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.car-detail-slider {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.car-detail-slide {
+    height: 400px;
+}
+
+.car-detail-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.car-detail-thumbs {
+    display: flex;
+    gap: 10px;
+}
+
+.car-thumb {
+    width: 100px;
+    height: 70px;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.car-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.car-thumb.active,
+.car-thumb:hover {
+    border-color: var(--primary);
+}
+
+.car-detail-sidebar {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(214, 156, 30, 0.2);
+    border-radius: 10px;
+    padding: 30px;
+    position: sticky;
+    top: 100px;
+}
+
+.car-detail-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--light);
+}
+
+.car-detail-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.car-detail-price {
+    background: rgba(214, 156, 30, 0.1);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.car-detail-price .price-label {
+    color: var(--light-dark);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.car-detail-price .price-amount {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.car-detail-price .price-amount span {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--light-dark);
+}
+
+.car-detail-price .price-terms {
+    color: var(--light);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.car-detail-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.car-detail-agent {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.agent-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    border: 2px solid var(--primary);
+}
+
+.agent-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.agent-info h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--light);
+}
+
+.agent-info p {
+    color: var(--light-dark);
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.car-detail-tabs {
+    margin-top: 50px;
+}
+
+.tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(214, 156, 30, 0.2);
+    padding-bottom: 10px;
+}
+
+.tab-nav button {
+    background: none;
+    border: none;
+    color: var(--light-dark);
+    padding: 10px 20px;
+    border-radius: 5px 5px 0 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-nav button.active,
+.tab-nav button:hover {
+    color: var(--primary);
+    background: rgba(214, 156, 30, 0.1);
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ============================
+    FAQ SECTION
+=============================== */
+.faq-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(214, 156, 30, 0.2);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.faq-title {
+    padding: 15px 20px;
+    background: rgba(214, 156, 30, 0.05);
+    cursor: pointer;
+    position: relative;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.faq-title h5 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.faq-title:after {
+    content: "\f107";
+    font-family: "Font Awesome 5 Free", "FontAwesome";
+    font-weight: 900;
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.faq-item.active .faq-title:after {
+    transform: rotate(180deg);
+}
+
+.faq-item.active .faq-title {
+    background: rgba(214, 156, 30, 0.1);
+}
+
+.faq-content {
+    display: none;
+    padding: 0 20px;
+}
+
+.faq-item.active .faq-content {
+    display: block;
+    padding: 20px;
+}
+
+/* ============================
+    BREADCRUMBS
+=============================== */
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: transparent;
+}
+
+.breadcrumb li {
+    position: relative;
+    padding-right: 20px;
+    margin-right: 10px;
+    color: var(--light-dark);
+    font-size: 14px;
+}
+
+.breadcrumb li:after {
+    content: '/';
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--primary);
+}
+
+.breadcrumb li:last-child {
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.breadcrumb li:last-child:after {
+    display: none;
+}
+
+.breadcrumb li a {
+    color: var(--primary);
+}
+
+.breadcrumb li a:hover {
+    color: var(--primary-light);
+}
+
+/* ============================
+    PAGE HEADER
+=============================== */
+.page-header {
+    position: relative;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-top: 90px;
+}
+
+.page-header:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
+    z-index: 1;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.page-header p {
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: var(--light-medium);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 992px) {
+    .page-header {
+        height: 250px;
+    }
+    
+    .page-header h1 {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        height: 200px;
+        margin-top: 70px;
+    }
+    
+    .page-header h1 {
+        font-size: 30px;
+    }
+    
+    .page-header p {
+        font-size: 16px;
+    }
+}
+
+/* ============================
+    PROCESS CARDS - SHAKEN PAGE
+=============================== */
+.process-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(214, 156, 30, 0.2);
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    height: 100%;
+    transition: var(--transition);
+}
+
+.process-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.process-card__number {
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: var(--light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.process-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--light);
+}
+
+.process-card p {
+    color: var(--light-dark);
+    margin-bottom: 0;
+}
+
+/* Pricing Cards - Shaken Page */
+.pricing-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(214, 156, 30, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+    transition: var(--transition);
+    position: relative;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.pricing-card.featured {
+    border: 2px solid var(--primary);
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-card.featured:hover {
+    transform: scale(1.03) translateY(-5px);
+}
+
+.pricing-card__badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--primary);
+    color: var(--light);
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.pricing-card__header {
+    padding: 30px;
+    text-align: center;
+    border-bottom: 1px solid rgba(214, 156, 30, 0.2);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.pricing-card__header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--light);
+}
+
+.pricing-card__price {
+    padding: 30px;
+    text-align: center;
+    background: rgba(214, 156, 30, 0.05);
+}
+
+.pricing-card__price h4 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.pricing-card__features {
+    padding: 30px;
+}
+
+.pricing-card__features ul li {
+    color: var(--light-dark);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.pricing-card__features ul li i {
+    color: var(--primary);
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.pricing-card__footer {
+    padding: 0 30px 30px;
+    text-align: center;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.pricing-note {
+    background: rgba(214, 156, 30, 0.05);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    font-size: 14px;
+    color: var(--light-dark);
+}
+
+.pricing-note p {
+    margin-bottom: 5px;
+}
+
+.pricing-note p:last-child {
+    margin-bottom: 0;
+}
+
+/* Correção para links em botões */
+.btn-link {
+    color: var(--primary);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+
+.btn-link i {
+    transition: transform 0.3s ease;
+}
+
+.btn-link:hover i {
+    transform: translateX(5px);
+}
+
+/* ============================
+    PRELOADER
+=============================== */
+#preloder {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: var(--dark);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(214, 156, 30, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Classe para overflow hidden */
+.overflow-hidden {
+    overflow: hidden;
+}
+
+/* ============================
+    RESPONSIVIDADE APRIMORADA
+=============================== */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 960px;
+    }
+    
+    .car-detail-slide {
+        height: 350px;
+    }
+    
+    .car-thumb {
+        width: 80px;
+        height: 60px;
+    }
+    
+    .arrow-nav {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 992px) {
+    :root {
+        --padding-section: 80px 0;
+    }
+    
+    .container {
+        max-width: 720px;
+    }
+    
+    .section-title h2 {
+        font-size: 32px;
+    }
+    
+    .about-content {
+        padding-right: 0;
+        margin-bottom: 40px;
+    }
+    
+    .car-detail-slide {
+        height: 300px;
+    }
+    
+    .car-detail-sidebar {
+        margin-top: 30px;
+        position: static;
+    }
+    
+    .car-detail-price .price-amount {
+        font-size: 30px;
+    }
+    
+    .footer-contact-buttons {
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .car-filters {
+        justify-content: center;
+    }
+    
+    .not-found-content {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .not-found-buttons {
+        justify-content: center;
+    }
+    
+    .cta-content {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .cta-button {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .mobile-menu {
+        padding-top: 80px;
+    }
+    
+    .mobile-menu .btn {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --padding-section: 60px 0;
+    }
+    
+    .container {
+        max-width: 540px;
+    }
+    
+    .section-title h2 {
+        font-size: 28px;
+    }
+    
+    .header__top {
+        display: none;
+    }
+    
+    .car-detail-slide {
+        height: 250px;
+    }
+    
+    .car-thumb {
+        width: 60px;
+        height: 45px;
+    }
+    
+    .car-detail-header h1 {
+        font-size: 24px;
+    }
+    
+    .tab-nav button {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    .arrow-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .car-card__image {
+        height: 180px;
+    }
+    
+    .whatsapp-float a {
+        padding: 10px 15px;
+    }
+    
+    .whatsapp-float span {
+        display: none;
+    }
+    
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .service-card, 
+    .pricing-card, 
+    .process-card {
+        margin-bottom: 30px;
+    }
+    
+    .pricing-card.featured {
+        transform: none;
+    }
+    
+    .pricing-card.featured:hover {
+        transform: translateY(-5px);
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .hero__content h1 {
+        font-size: 28px;
+    }
+    
+    .section-title h2 {
+        font-size: 24px;
+    }
+    
+    .section-title p {
+        font-size: 14px;
+    }
+    
+    .car-detail-slide {
+        height: 200px;
+    }
+    
+    .car-detail-tabs .tab-nav {
+        flex-wrap: wrap;
+    }
+    
+    .car-detail-tabs .tab-nav button {
+        flex: 0 0 calc(50% - 5px);
+        text-align: center;
+        font-size: 12px;
+    }
+    
+    .footer-contact h2 {
+        font-size: 24px;
+    }
+    
+    .footer-contact-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .car-card__image {
+        height: 160px;
+    }
+}
+
+/* ============================
+    ANIMAÇÕES
+=============================== */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn { animation: fadeIn 0.8s ease forwards; }
+.animate-fadeInUp { animation: fadeInUp 0.8s ease forwards; }
+.animate-fadeInDown { animation: fadeInDown 0.8s ease forwards; }
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+/* ============================
+    CORREÇÕES PARA O CARROSSEL DE CARROS
+=============================== */
+/* Regra para garantir que os itens visíveis se reorganizem no grid */
+.car-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.car-grid .car-item {
+    transition: all 0.4s ease;
+}
+
+/* Regra para quando não há itens suficientes */
+.car-grid:empty {
+    display: none;
+}
+
+/* Melhor visibilidade para itens filtrados */
+.car-item:not(:visible) {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo para a mensagem de "nenhum carro encontrado" */
+.no-cars-found {
+    width: 100%;
+    text-align: center;
+    padding: 40px 0;
+    background: rgba(34, 34, 34, 0.6);
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+    border: 1px solid rgba(214, 156, 30, 0.1);
+}
+
+.no-cars-found p {
+    color: var(--light-medium);
+    font-size: 16px;
+    margin: 0;
+}

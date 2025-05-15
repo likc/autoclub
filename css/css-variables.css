@@ -1,0 +1,45 @@
+/* 
+   AutoClub Website - Variáveis CSS
+   Versão: 1.0 - Essencial
+*/
+
+:root {
+    /* Cores principais */
+    --primary: #d69c1e;
+    --primary-light: #e6ae30;
+    --primary-dark: #b48218;
+    
+    /* Esquema de cores escuras */
+    --dark: #151515;
+    --dark-medium: #222222;
+    --dark-light: #333333;
+    
+    /* Esquema de cores claras */
+    --light: #ffffff;
+    --light-medium: #f0f0f0;
+    --light-dark: #d0d0d0;
+    
+    /* Cores de destaque */
+    --accent: #ff5500;
+    --success: #2ecc71;
+    --error: #e74c3c;
+    --gray: #727171;
+    
+    /* Propriedades de estilo */
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+    --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --padding-section: 100px 0;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --padding-section: 60px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    :root {
+        --padding-section: 40px 0;
+    }
+}

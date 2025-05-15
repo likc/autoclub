@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veículos Disponíveis - AutoClub</title>
+    
+    <!-- Meta informações -->
+    <meta name="description" content="AutoClub - Confira nossa seleção de veículos disponíveis no Japão. Financiamento facilitado, mesmo sem visto permanente. Acesso a leilões exclusivos.">
+    <meta name="keywords" content="carros Japão, financiamento carros Japão, brasileiros Japão, carros importados, AutoClub, carros disponíveis">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="img/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="img/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="AutoClub" />
+    <link rel="manifest" href="img/favicon/site.webmanifest" />
+    
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Google Fonts - Poppins (moderno) + Lato -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS Otimizado -->
+    <link rel="stylesheet" href="css/optimized.css">
+</head>
+<body>
+    <!-- Whatsapp Flutuante -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20em%20um%20veículo">
+            <i class="fab fa-whatsapp"></i> Falar Agora
+        </a>
+    </div>
+    
+    <!-- Botão Voltar ao Topo -->
+    <div class="back-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <ul class="header__top__info">
+                        <li><i class="fas fa-map-marker-alt"></i> Venha nos fazer uma visita! <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">abrir no mapa</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
+                    </ul>
+                    <div class="header__top__social">
+                        <a href="tel:+818092815155"><i class="fas fa-phone-alt"></i> (080) 9281-5155</a>
+                        <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="header__nav">
+                <div class="header__logo">
+                    <a href="index.php">
+                        <img src="img/logo.png" alt="AutoClub Logo">
+                    </a>
+                </div>
+                <nav class="header__menu">
+                    <ul>
+                        <li><a href="index.php">Início</a></li>
+                        <li class="active"><a href="carros.html">Carros</a></li>
+                        <li><a href="index.php#financiamento">Financiamento</a></li>
+                        <li><a href="shaken.html">Shaken</a></li>
+                        <li><a href="sobre.html">Sobre Nós</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </nav>
+                <div class="header__cta">
+                    <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="btn btn-primary">Agendar Visita</a>
+                </div>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="index.php">Início</a></li>
+            <li class="active"><a href="carros.html">Carros</a></li>
+            <li><a href="index.php#financiamento">Financiamento</a></li>
+            <li><a href="shaken.html">Shaken</a></li>
+            <li><a href="sobre.html">Sobre Nós</a></li>
+            <li><a href="contato.html">Contato</a></li>
+            <li><a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="btn btn-primary">Agendar Visita</a></li>
+        </ul>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background-image: url('img/cars-bg.jpg');">
+        <div class="container">
+            <h1>Veículos Disponíveis</h1>
+            <p>Conheça nossa seleção premium de veículos para todos os gostos e necessidades</p>
+            <ul class="breadcrumb">
+                <li><a href="index.php">Início</a></li>
+                <li>Carros</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Car Search Filter -->
+    <section class="section-padding" style="padding-bottom: 0;">
+        <div class="container">
+            <div class="car-search-filter">
+                <form id="car-search-form" class="row g-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="form-group">
+                            <label for="brand">Marca</label>
+                            <select id="brand" class="form-control">
+                                <option value="">Todas as marcas</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="honda">Honda</option>
+                                <option value="nissan">Nissan</option>
+                                <option value="mazda">Mazda</option>
+                                <option value="bmw">BMW</option>
+                                <option value="mercedes">Mercedes-Benz</option>
+                                <option value="porsche">Porsche</option>
+                                <option value="lamborghini">Lamborghini</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="form-group">
+                            <label for="body-type">Tipo</label>
+                            <select id="body-type" class="form-control">
+                                <option value="">Todos os tipos</option>
+                                <option value="sedan">Sedan</option>
+                                <option value="suv">SUV</option>
+                                <option value="hatchback">Hatchback</option>
+                                <option value="wagon">Station Wagon</option>
+                                <option value="coupe">Coupé</option>
+                                <option value="convertible">Conversível</option>
+                                <option value="truck">Pickup</option>
+                                <option value="van">Van/Minivan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="form-group">
+                            <label for="year-min">Ano (Mínimo)</label>
+                            <select id="year-min" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="2022">2022</option>
+                                <option value="2020">2020</option>
+                                <option value="2018">2018</option>
+                                <option value="2016">2016</option>
+                                <option value="2014">2014</option>
+                                <option value="2012">2012</option>
+                                <option value="2010">2010</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6">
+                        <div class="form-group">
+                            <label for="price-max">Valor máximo</label>
+                            <select id="price-max" class="form-control">
+                                <option value="">Qualquer</option>
+                                <option value="500000">¥500,000</option>
+                                <option value="1000000">¥1,000,000</option>
+                                <option value="2000000">¥2,000,000</option>
+                                <option value="3000000">¥3,000,000</option>
+                                <option value="5000000">¥5,000,000</option>
+                                <option value="10000000">¥10,000,000+</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-12">
+                        <div class="form-group d-flex">
+                            <button type="submit" class="btn btn-primary w-100 mt-4">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Car Filter Buttons -->
+    <section class="section-padding" style="padding-top: 30px; padding-bottom: 0;">
+        <div class="container">
+            <div class="car-filters">
+                <button class="car-filter-btn active" data-filter="*">Todos</button>
+                <button class="car-filter-btn" data-filter="sale">Sem Entrada</button>
+                <button class="car-filter-btn" data-filter="luxury">Luxo</button>
+                <button class="car-filter-btn" data-filter="sport">Esportivos</button>
+                <button class="car-filter-btn" data-filter="family">Família</button>
+                <button class="car-filter-btn" data-filter="kei">Kei Car</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cars List -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row car-filter">
+                <!-- Carro 1 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix luxury">
+                    <div class="car-card">
+                        <div class="car-card__badge">
+                            <span class="badge badge-primary">Novo</span>
+                        </div>
+                        <div class="car-card__image">
+                            <img src="img/cars/car-1.jpg" alt="Porsche Cayenne">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2016</span>
+                            <h3 class="car-card__title">Porsche Cayenne Turbo S</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>35,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>AT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>12/2025</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge">Até 84x</span>
+                                <div class="car-card__price-amount">¥30.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Porsche%20Cayenne%20Turbo%20S%202016" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 2 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix sale family">
+                    <div class="car-card">
+                        <div class="car-card__image">
+                            <img src="img/cars/car-2.jpg" alt="Toyota Camry">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2020</span>
+                            <h3 class="car-card__title">Toyota Camry ASV50L</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>35,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>AT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>12/2025</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge" style="background: var(--accent);">Até 120x</span>
+                                <div class="car-card__price-amount">¥30.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Toyota%20Camry%20ASV50L%202020" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 3 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix sport">
+                    <div class="car-card">
+                        <div class="car-card__badge">
+                            <span class="badge badge-danger">Último</span>
+                        </div>
+                        <div class="car-card__image">
+                            <img src="img/cars/car-3.jpg" alt="BMW S1000RR">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2017</span>
+                            <h3 class="car-card__title">BMW S1000RR 2019 M</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>35,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>AT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>12/2025</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge">Até 84x</span>
+                                <div class="car-card__price-amount">¥30.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20na%20BMW%20S1000RR%202019%20M" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 4 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix luxury sale">
+                    <div class="car-card">
+                        <div class="car-card__image">
+                            <img src="img/cars/car-4.jpg" alt="Lamborghini Huracan">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2019</span>
+                            <h3 class="car-card__title">Lamborghini Huracan Evo</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>35,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>AT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>12/2025</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge" style="background: var(--accent);">Até 120x</span>
+                                <div class="car-card__price-amount">¥190.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Lamborghini%20Huracan%20Evo%202019" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 5 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix kei family">
+                    <div class="car-card">
+                        <div class="car-card__badge">
+                            <span class="badge badge-success">Popular</span>
+                        </div>
+                        <div class="car-card__image">
+                            <img src="img/cars/car-5.jpg" alt="Suzuki Spacia">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2021</span>
+                            <h3 class="car-card__title">Suzuki Spacia Custom</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>12,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>CVT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>02/2026</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge" style="background: var(--accent);">Até 120x</span>
+                                <div class="car-card__price-amount">¥15.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Suzuki%20Spacia%20Custom%202021" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 6 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix family">
+                    <div class="car-card">
+                        <div class="car-card__image">
+                            <img src="img/cars/car-6.jpg" alt="Honda Vezel">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2020</span>
+                            <h3 class="car-card__title">Honda Vezel Hybrid RS</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>25,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>CVT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>10/2025</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge">Até 84x</span>
+                                <div class="car-card__price-amount">¥28.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Honda%20Vezel%20Hybrid%20RS%202020" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 7 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix sport sale">
+                    <div class="car-card">
+                        <div class="car-card__image">
+                            <img src="img/cars/car-7.jpg" alt="Nissan GT-R">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2018</span>
+                            <h3 class="car-card__title">Nissan GT-R Premium</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>28,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>DCT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>08/2024</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge" style="background: var(--accent);">Até 120x</span>
+                                <div class="car-card__price-amount">¥95.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Nissan%20GT-R%20Premium%202018" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 8 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix kei">
+                    <div class="car-card">
+                        <div class="car-card__badge">
+                            <span class="badge badge-primary">Econômico</span>
+                        </div>
+                        <div class="car-card__image">
+                            <img src="img/cars/car-8.jpg" alt="Daihatsu Tanto">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2019</span>
+                            <h3 class="car-card__title">Daihatsu Tanto Custom</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>15,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>CVT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>06/2025</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge">Até 84x</span>
+                                <div class="car-card__price-amount">¥14.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Daihatsu%20Tanto%20Custom%202019" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carro 9 -->
+                <div class="col-lg-4 col-md-6 col-sm-6 mb-4 mix family sale">
+                    <div class="car-card">
+                        <div class="car-card__image">
+                            <img src="img/cars/car-9.jpg" alt="Toyota Alphard">
+                            <div class="car-card__overlay">
+                                <a href="car-details.html" class="btn btn-sm btn-outline">Ver Detalhes</a>
+                            </div>
+                        </div>
+                        <div class="car-card__content">
+                            <span class="car-card__year">2017</span>
+                            <h3 class="car-card__title">Toyota Alphard Executive</h3>
+                            <ul class="car-card__specs">
+                                <li><i class="fas fa-road"></i> <span>40,000</span> km</li>
+                                <li><i class="fas fa-cog"></i> <span>AT</span> Automático</li>
+                                <li><i class="fas fa-calendar-alt"></i> Shaken: <span>11/2024</span></li>
+                            </ul>
+                            <div class="car-card__price">
+                                <span class="car-card__price-badge" style="background: var(--accent);">Até 120x</span>
+                                <div class="car-card__price-amount">¥45.000<small>/Mês</small></div>
+                            </div>
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20Toyota%20Alphard%20Executive%202017" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paginação -->
+            <div class="pagination-container mt-4">
+                <ul class="pagination">
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Leilão Section -->
+    <section class="section-padding" style="background-color: var(--dark-medium);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="section-title text-left">
+                        <span>Acesso a Leilões</span>
+                        <h2>Não encontrou o que procura?</h2>
+                        <p>A AutoClub tem acesso exclusivo aos principais leilões de veículos do Japão.</p>
+                    </div>
+                    <div class="about-content mb-4">
+                        <p>Com nosso acesso exclusivo aos leilões japoneses, podemos encontrar praticamente qualquer modelo de veículo para você. Semanalmente, mais de 5.000 veículos estão disponíveis nos leilões, com opções para todos os gostos e orçamentos.</p>
+                        
+                        <p>Diga-nos o modelo que você procura, e nossos especialistas vão encontrá-lo pelo melhor preço possível.</p>
+                        
+                        <ul class="about-list">
+                            <li><i class="fas fa-check-circle"></i> Acesso a veículos não disponíveis no mercado comum</li>
+                            <li><i class="fas fa-check-circle"></i> Preços geralmente mais baixos que no mercado de varejo</li>
+                            <li><i class="fas fa-check-circle"></i> Avaliação profissional para garantir a qualidade do veículo</li>
+                            <li><i class="fas fa-check-circle"></i> Acompanhamento completo de todo o processo</li>
+                        </ul>
+                    </div>
+                    <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20leilões%20de%20veículos" class="btn btn-primary">Saiba mais sobre os leilões</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="auction-image">
+                        <img src="img/auction.jpg" alt="Leilão de Veículos" class="img-fluid rounded">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section-padding cta-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 col-md-8">
+                    <div class="cta-content">
+                        <h2>Não achou o carro dos seus sonhos?</h2>
+                        <p>Entre em contato e conte para nós o que você está procurando.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 text-right">
+                    <div class="cta-button">
+                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20estou%20procurando%20um%20carro%20específico" class="btn btn-white">Fale com um consultor</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="footer-contact">
+                            <h2>Seja você também um cliente <span style="color: var(--primary);">PREMIUM</span>!</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 text-right">
+                        <div class="footer-contact-buttons">
+                            <a href="tel:+818092815155" class="footer-contact-btn">
+                                <i class="fas fa-phone-alt"></i> (080) 9281-5155
+                            </a>
+                            <a href="mailto:contato@autoclub.jp" class="footer-contact-btn">
+                                <i class="fas fa-envelope"></i> contato@autoclub.jp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Navegação</h3>
+                        <ul>
+                            <li><a href="index.php">Início</a></li>
+                            <li><a href="carros.html">Carros</a></li>
+                            <li><a href="index.php#financiamento">Financiamento</a></li>
+                            <li><a href="shaken.html">Shaken</a></li>
+                            <li><a href="sobre.html">Sobre Nós</a></li>
+                            <li><a href="contato.html">Contato</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Serviços</h3>
+                        <ul>
+                            <li><a href="#">Financiamento Japonês</a></li>
+                            <li><a href="#">Financiamento Próprio</a></li>
+                            <li><a href="#">Leilões de Veículos</a></li>
+                            <li><a href="shaken.html">Serviço de Shaken</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Contato</h3>
+                        <ul class="contact-info">
+                            <li><i class="fas fa-map-marker-alt"></i> <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">Ver no mapa</a></li>
+                            <li><i class="fas fa-phone-alt"></i> <a href="tel:+818092815155">(080) 9281-5155</a></li>
+                            <li><i class="fas fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
+                            <li><i class="fas fa-clock"></i> Segunda a Sábado: 9h às 18h</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer-widget">
+                        <h3>Siga-nos</h3>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/+818092815155" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>AutoClub 結 | Copyright &copy;<script>document.write(new Date().getFullYear());</script> - Todos os direitos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery e scripts principais -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/main-updated.js"></script>
+</body>
+</html>

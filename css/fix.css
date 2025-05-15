@@ -1,0 +1,262 @@
+/* Correção definitiva para o header */
+.header {
+  position: static !important; /* Mudança crítica: forçar posição estática */
+  background-color: #151515 !important;
+  width: 100%;
+  z-index: 100;
+}
+
+/* Ajustar o título da página */
+.header + section {
+  padding-top: 20px !important;
+}
+
+.page-header {
+  margin-top: 0 !important;
+  padding-top: 60px !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: 250px !important;
+}
+
+/* Garantir que não haja espaço indesejado */
+body {
+  padding-top: 0 !important; 
+  margin-top: 0 !important;
+}
+
+/* Corrigir sobreposição do título */
+.page-header h1 {
+  position: relative;
+  z-index: 2;
+}
+
+/* Ajuste adicional para o banner de topo */
+.page-header:after {
+  z-index: 1 !important;
+}
+
+/* Garantir que o menu mobile funcione */
+.mobile-menu {
+  z-index: 9999 !important;
+}
+
+.mobile-menu-overlay {
+  z-index: 9998 !important;
+}
+
+/* Alinhamento do logo e navegação */
+.header__nav {
+  align-items: center !important;
+  height: auto !important;
+  padding: 15px 0 !important;
+}
+
+/* Ajuste para quando o menu ficar sticky (se usado) */
+.header.sticky {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+/* Estilos para o card de preço premium */
+.pricing-card-premium {
+  background: rgba(34, 34, 34, 0.6);
+  border: 1px solid rgba(214, 156, 30, 0.3);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card-premium:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, var(--primary), var(--primary-light));
+}
+
+.price-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--light);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.price-subtitle {
+  color: var(--light-dark);
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 16px;
+}
+
+.price-table {
+  margin-bottom: 40px;
+  border: 1px solid rgba(214, 156, 30, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.price-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 30px;
+  border-bottom: 1px solid rgba(214, 156, 30, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.price-option:last-child {
+  border-bottom: none;
+}
+
+.price-option:hover {
+  background-color: rgba(214, 156, 30, 0.05);
+}
+
+.price-option-header h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--light);
+  margin-bottom: 5px;
+}
+
+.price-option-header p {
+  color: var(--light-dark);
+  margin-bottom: 0;
+  font-size: 15px;
+}
+
+.price-amount {
+  text-align: right;
+}
+
+.price-amount span {
+  display: block;
+  color: var(--light-dark);
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.price-amount h4 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.price-amount p {
+  color: var(--light-dark);
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.included-services {
+  margin-bottom: 30px;
+}
+
+.included-services h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(214, 156, 30, 0.2);
+}
+
+.services-grid {
+  display: flex;
+  justify-content: center;
+}
+
+.services-grid ul {
+  columns: 2;
+  column-gap: 30px;
+  width: 100%;
+}
+
+.services-grid ul li {
+  margin-bottom: 15px;
+  break-inside: avoid;
+  display: flex;
+  align-items: flex-start;
+}
+
+.services-grid ul li i {
+  color: var(--primary);
+  margin-right: 10px;
+  font-size: 18px;
+  position: relative;
+  top: 2px;
+}
+
+.price-cta {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.price-cta .btn {
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(214, 156, 30, 0.3);
+  transition: all 0.3s ease;
+}
+
+.price-cta .btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(214, 156, 30, 0.4);
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+  .pricing-card-premium {
+    padding: 30px;
+  }
+  
+  .price-option {
+    padding: 20px;
+  }
+  
+  .price-option-header h4 {
+    font-size: 20px;
+  }
+  
+  .price-amount h4 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 767px) {
+  .price-option {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .price-option-header {
+    margin-bottom: 15px;
+  }
+  
+  .price-amount {
+    text-align: center;
+  }
+  
+  .services-grid ul {
+    columns: 1;
+  }
+}

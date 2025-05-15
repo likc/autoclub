@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="AutoClub - Entre em contato conosco para financiamento de carros no Japão. Atendimento especializado para brasileiros, com opções sem visto permanente.">
+    <meta name="keywords" content="contato AutoClub, financiamento carros Japão, brasileiros Japão, carros importados, AutoClub">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/png" href="img/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="img/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="img/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="AutoClub" />
+    <link rel="manifest" href="img/favicon/site.webmanifest" />
+    <title>Entre em Contato - AutoClub 結 - Seu sonho automotivo realizado no Japão</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+<!-- Variáveis CSS -->
+<link rel="stylesheet" href="css/css-variables.css">
+
+<!-- CSS Principal -->
+<link rel="stylesheet" href="css/style.css">
+
+<!-- CSS Adicional -->
+<link rel="stylesheet" href="css/additional-styles.css">
+
+<!-- Slick Slider CSS (para páginas com slider) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    
+    <style>
+        /* Estilos específicos para a página de contato */
+        .contact-header {
+            padding: 120px 0 80px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+        
+        .contact-header h2 {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        
+        .contact-header p {
+            color: #f0f0f0;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .contact-info-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(214, 156, 30, 0.2);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-info-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: #d69c1e;
+        }
+        
+        .contact-info-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(214, 156, 30, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .contact-info-icon i {
+            font-size: 30px;
+            color: #d69c1e;
+        }
+        
+        .contact-info-item h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info-item p {
+            color: #d0d0d0;
+            margin-bottom: 10px;
+        }
+        
+        .contact-info-item a {
+            color: #d69c1e;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-info-item a:hover {
+            color: #ffffff;
+        }
+        
+        .contact-form {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(214, 156, 30, 0.2);
+            border-radius: 8px;
+            padding: 40px;
+        }
+        
+        .contact-form h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(214, 156, 30, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #d69c1e;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(214, 156, 30, 0.2);
+        }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23d69c1e" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #d69c1e;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-submit-btn:hover {
+            background: #e6ae30;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(214, 156, 30, 0.3);
+        }
+        
+        .map-container {
+            height: 450px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(214, 156, 30, 0.2);
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .contact-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .contact-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(214, 156, 30, 0.1);
+            border: 1px solid rgba(214, 156, 30, 0.3);
+            border-radius: 30px;
+            color: #d69c1e;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .contact-option:hover {
+            background: #d69c1e;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        
+        .contact-option i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .form-status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .form-status.success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+        }
+        
+        .form-status.error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 767px) {
+            .contact-info-item {
+                margin-bottom: 30px;
+            }
+            
+            .contact-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Botão Whatsapp Flutuante -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais" target="_blank">
+            <i class="fa fa-whatsapp"></i> Falar Agora
+        </a>
+    </div>
+    
+    <!-- Botão Voltar ao Topo -->
+    <div class="back-to-top">
+        <i class="fa fa-chevron-up"></i>
+    </div>
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <ul class="header__top__widget">
+                            <li><i class="fa fa-map-marker"></i> Venha nos fazer uma visita! <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">abrir no mapa</a></li>
+                            <li><i class="fa fa-envelope-o"></i> <a href="mailto:contato@autoclub.jp" target="_blank">contato@autoclub.jp</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="header__top__right">
+                            <div class="header__top__phone">
+                                <i class="fa fa-phone"></i>
+                                <span><a href="tel:+818092815155" class="Blondie">(080) 9281-5155</a></span>
+                            </div>
+                            <div class="header__top__social">
+                                <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fa fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="header__logo">
+                        <a href="./index.php"><img src="img/logo.png" alt="AutoClub Logo"></a>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="header__nav">
+                        <nav class="header__menu">
+                            <ul>
+                                <li><a href="./index.php">Início</a></li>
+                                <li><a href="./index.php#carros">Carros</a></li>
+                                <li><a href="./index.php#financiamento">Financiamento</a></li>
+                                <li><a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20shaken.">Shaken</a></li>
+                                <li><a href="./index.php#sobre">Sobre Nós</a></li>
+                                <li><a href="./faq.html">FAQ</a></li>
+                                <li class="active"><a href="./contato.html">Contato</a></li>
+                            </ul>
+                        </nav>
+                        <div class="header__nav__widget">
+                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="primary-btn">Agendar Visita</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <span class="fa fa-bars"></span>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Contact Header Begin -->
+    <section class="contact-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Entre em Contato</h2>
+                    <p>Estamos aqui para ajudar você a realizar o sonho de ter seu próprio veículo no Japão. Fale conosco e descubra as melhores opções para você.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Header End -->
+
+    <!-- Contact Info Begin -->
+    <section class="spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <h4>Nosso Endereço</h4>
+                        <p>Insira aqui o endereço completo da AutoClub no Japão</p>
+                        <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank" class="mt-3 d-inline-block">Ver no mapa <i class="fa fa-external-link"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <h4>Telefone & WhatsApp</h4>
+                        <p>Atendimento em português</p>
+                        <p><a href="tel:+818092815155">(080) 9281-5155</a></p>
+                        <a href="https://wa.me/+818092815155" target="_blank" class="mt-3 d-inline-block">Enviar mensagem <i class="fa fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <h4>E-mail</h4>
+                        <p>Para orçamentos e dúvidas</p>
+                        <p><a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></p>
+                        <p class="mt-2">Horário de Atendimento:</p>
+                        <p>Segunda a Sábado: 9h às 18h</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="contact-form">
+                        <div class="form-status success">Mensagem enviada com sucesso! Entraremos em contato em breve.</div>
+                        <div class="form-status error">Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.</div>
+                        
+                        <h3>Envie-nos uma mensagem</h3>
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="name">Nome Completo</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Telefone/WhatsApp</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Assunto</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="" disabled selected>Selecione o assunto</option>
+                                    <option value="financiamento">Informações sobre Financiamento</option>
+                                    <option value="carros">Interesse em um veículo específico</option>
+                                    <option value="shaken">Serviço de Shaken</option>
+                                    <option value="leilao">Leilões de Veículos</option>
+                                    <option value="outro">Outro assunto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Mensagem</label>
+                                <textarea id="message" name="message" required></textarea>
+                            </div>
+                            <button type="submit" class="form-submit-btn">Enviar Mensagem</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.846379992631!2d130.4018879!3d33.5867618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x354191c7e4af036d%3A0x2ee22b7a9be13865!2sT%C5%8Dky%C5%8D%2C%20Japan!5e0!3m2!1sen!2sus!4v1651249002099!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    
+                    <div class="contact-options">
+                        <a href="https://wa.me/+818092815155" target="_blank" class="contact-option">
+                            <i class="fa fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank" class="contact-option">
+                            <i class="fa fa-facebook"></i> Facebook
+                        </a>
+                        <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank" class="contact-option">
+                            <i class="fa fa-instagram"></i> Instagram
+                        </a>
+                        <a href="tel:+818092815155" class="contact-option">
+                            <i class="fa fa-phone"></i> Ligar Agora
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Info End -->
+
+    <!-- Footer Section Begin -->
+    <footer class="footer set-bg" data-setbg="img/footer-bg.jpg">
+        <div class="container">
+            <div class="footer__contact">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="footer__contact__title">
+                            <h2>Seja você também um cliente <font color="gold">PREMIUM</font>!</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="footer__contact__option">
+                            <div class="option__item"><i class="fa fa-phone"></i> <a href="tel:+818092815155" class="Blondie">(080) 9281-5155</a></div>
+                            <div class="option__item email"><i class="fa fa-envelope-o"></i> <a href="mailto:contato@autoclub.jp" target="_blank">contato@autoclub.jp</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Links rápidos do rodapé -->
+            <div class="row" style="margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px;">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h5>Navegação</h5>
+                        <ul>
+                            <li><a href="./index.php">Início</a></li>
+                            <li><a href="./index.php#carros">Carros</a></li>
+                            <li><a href="./index.php#financiamento">Financiamento</a></li>
+                            <li><a href="./index.php#sobre">Sobre Nós</a></li>
+                            <li><a href="./faq.html">FAQ</a></li>
+                            <li><a href="./contato.html">Contato</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h5>Serviços</h5>
+                        <ul>
+                            <li><a href="#">Financiamento Japonês</a></li>
+                            <li><a href="#">Financiamento Próprio</a></li>
+                            <li><a href="#">Leilões de Veículos</a></li>
+                            <li><a href="#">Serviço de Shaken</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h5>Contato</h5>
+                        <ul>
+                            <li><i class="fa fa-map-marker"></i> <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">Ver no mapa</a></li>
+                            <li><i class="fa fa-phone"></i> <a href="tel:+818092815155">(080) 9281-5155</a></li>
+                            <li><i class="fa fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
+                            <li><i class="fa fa-clock-o"></i> Segunda a Sábado: 9h às 18h</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <h5>Siga-nos</h5>
+                        <div class="footer__social" style="margin-top: 15px;">
+                            <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank" class="facebook"><i class="fa fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank" class="instagram"><i class="fa fa-instagram"></i></a>
+                            <a href="https://wa.me/+818092815155" target="_blank" class="whatsapp"><i class="fa fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Designed By LiKc -->
+            <div class="footer__copyright__text">
+                <p>AutoClub 結 | Copyright &copy;<script>document.write(new Date().getFullYear());</script> - Todos os direitos reservados</p>
+            </div>
+            <!-- Designed By LiKc.net-->
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+
+    <!-- Js Plugins -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.nice-select.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/mixitup.min.js"></script>
+    <script src="js/jquery.slicknav.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+	<!-- jQuery e scripts principais -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/additional-scripts.js"></script>
+    
+    <!-- Script do Formulário de Contato -->
+    <script>
+        $(document).ready(function() {
+            // Form submission handling
+            $('#contact-form').submit(function(e) {
+                e.preventDefault();
+                
+                const form = $(this);
+                const submitBtn = form.find('button[type="submit"]');
+                const originalText = submitBtn.text();
+                
+                // Disable button and change text
+                submitBtn.prop('disabled', true).text('Enviando...');
+                
+                // Hide status messages
+                $('.form-status').hide();
+                
+                // Simulate form submission (replace with actual AJAX call to your backend)
+                setTimeout(function() {
+                    // Show success message
+                    $('.form-status.success').fadeIn();
+                    
+                    // Reset form
+                    form[0].reset();
+                    
+                    // Re-enable button
+                    submitBtn.prop('disabled', false).text(originalText);
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(function() {
+                        $('.form-status.success').fadeOut();
+                    }, 5000);
+                }, 1500);
+                
+                // In case of error (uncomment this and comment the success part above to test)
+                /*
+                setTimeout(function() {
+                    $('.form-status.error').fadeIn();
+                    submitBtn.prop('disabled', false).text(originalText);
+                    
+                    setTimeout(function() {
+                        $('.form-status.error').fadeOut();
+                    }, 5000);
+                }, 1500);
+                */
+            });
+            
+            // Botão Voltar ao Topo
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 300) {
+                    $('.back-to-top').addClass('visible');
+                } else {
+                    $('.back-to-top').removeClass('visible');
+                }
+            });
+            
+            $('.back-to-top').click(function() {
+                $('html, body').animate({scrollTop: 0}, 800);
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>
