@@ -71,17 +71,13 @@
     <link rel="stylesheet" href="css/css-variables.css">
     <link rel="stylesheet" href="css/optimized.css">
     
+	    <link rel="stylesheet" href="css/fix-carousel-layout.css">
+		
     <!-- Slick Slider CSS (para páginas com slider) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
 </head>
 <body>
-    <!-- Whatsapp Flutuante -->
-    <div class="whatsapp-float">
-        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais">
-            <i class="fab fa-whatsapp"></i> Falar Agora
-        </a>
-    </div>
     
     <!-- Botão Voltar ao Topo -->
     <div class="back-to-top">
@@ -234,7 +230,7 @@
         </div>
         
         <?php include 'show_cars.php'; ?>
-        
+
         <!-- Seção Não Achou o Carro -->
         <div class="not-found-car-section mt-5">
             <div class="row align-items-center">
@@ -437,127 +433,121 @@
 <script src="js/unified-carousel.js"></script>
 
 <script>
-// SOLUÇÃO DE EMERGÊNCIA - REESCRITA COMPLETA DO CARROSSEL
-document.addEventListener('DOMContentLoaded', function() {
-  if (typeof jQuery !== 'undefined') {
-    jQuery(function($) {
-      // Primeiro, vamos desabilitar todos os handlers de eventos existentes relacionados ao carrossel
-      $('.car-filter-btn').off();
-      $('.indicator').off();
-      $('.prev-arrow').off();
-      $('.next-arrow').off();
-      
-      // Variáveis globais para controle do carrossel
-      let currentSlide = 1;
-      const totalSlides = $('.car-slide').length;
-      
-      // Função para navegar para um slide específico
-      function navegarParaSlide(numero) {
-        // Limitar o número para não ultrapassar o total de slides
-        if (numero < 1) numero = 1;
-        if (numero > totalSlides) numero = totalSlides;
-        
-        // Atualizar slide atual
-        currentSlide = numero;
-        
-        // Esconder todos os slides
-        $('.car-slide').removeClass('active');
-        
-        // Mostrar o slide solicitado
-        $(`.car-slide[data-slide="${numero}"]`).addClass('active');
-        
-        // Atualizar indicadores
-        $('.indicator').removeClass('active');
-        $(`.indicator[data-slide="${numero}"]`).addClass('active');
-        
-        // Atualizar estado dos botões de navegação
-        $('.prev-arrow').prop('disabled', numero === 1);
-        $('.next-arrow').prop('disabled', numero === totalSlides);
-      }
-      
-      // Configurar navegação por botões
-      $('.prev-arrow').on('click', function() {
-        navegarParaSlide(currentSlide - 1);
-      });
-      
-      $('.next-arrow').on('click', function() {
-        navegarParaSlide(currentSlide + 1);
-      });
-      
-      // Configurar indicadores
-      $('.indicator').on('click', function() {
-        const slideNum = $(this).data('slide');
-        navegarParaSlide(slideNum);
-      });
-      
-      // Limpar quaisquer filtros anteriores e garantir que tudo esteja visível inicialmente
-      $('.car-item').css({
-        'display': 'block',
-        'visibility': 'visible',
-        'opacity': '1'
-      });
-      
-      // Configurar filtragem por botões - abordagem completamente nova
-      $('.car-filter-btn').on('click', function() {
-        const filter = $(this).data('filter');
-        
-        // Atualizar estado dos botões
+$(document).ready(function() {
+    // Solução para reorganizar carros ao filtrar
+    
+    // Guardar referência ao container principal
+    const $container = $('.simple-car-slider .slides-container');
+    
+    // Clonar todos os itens originais
+    const $allItems = $('.car-item').clone(true);
+    
+    $('.car-filter-btn').off('click').on('click', function() {
+        // Atualizar botões
         $('.car-filter-btn').removeClass('active');
         $(this).addClass('active');
         
-        // Voltar para o primeiro slide
-        navegarParaSlide(1);
+        const filter = $(this).data('filter');
         
-        // Remover mensagens anteriores
-        $('.no-cars-found').remove();
+        // Coletar items filtrados
+        let $itemsToShow;
         
-        // ABORDAGEM FIXA: Forçar exibição de todos os itens e linhas primeiro
-        $('.car-grid').show();
-        
-        // Se for "all", mostrar todos os carros
-        if (filter === 'all' || filter === '*') {
-          $('.car-item').show();
-          return;
+        if (filter === 'all') {
+            $itemsToShow = $allItems.clone();
+        } else {
+            $itemsToShow = $allItems.filter(`[data-category*="${filter}"]`).clone();
         }
         
-        // Esconder todos os carros primeiro
-        $('.car-item').hide();
+        // Limpar o container
+        $container.empty();
         
-        // Mostrar apenas os carros com a categoria selecionada
-        $(`.car-item[data-category*="${filter}"]`).show();
+        // Se não houver itens, mostrar mensagem
+        if ($itemsToShow.length === 0) {
+            $container.html('<div class="no-cars-found text-center p-5"><p>Nenhum carro encontrado nesta categoria.</p></div>');
+            return;
+        }
         
-        // IMPORTANTE: Em vez de tentar manter o layout existente, vamos garantir que cada linha
-        // tenha pelo menos um item visível, caso contrário, escondemos a linha inteira
-        $('.car-grid').each(function() {
-          const grid = $(this);
-          const visibleItems = grid.find('.car-item:visible').length;
-          
-          if (visibleItems === 0) {
-            grid.hide();
-          } else {
-            grid.show();
-          }
+        // Criar novo slide
+        const $newSlide = $('<div class="car-slide active" data-slide="1"></div>');
+        
+        // Criar grids e distribuir os itens
+        let $currentGrid = $('<div class="car-grid row"></div>');
+        let itemCount = 0;
+        
+        $itemsToShow.each(function(index) {
+            // Adicionar item ao grid atual
+            $currentGrid.append($(this));
+            itemCount++;
+            
+            // Se completou 4 itens, criar novo grid
+            if (itemCount === 4 && index < $itemsToShow.length - 1) {
+                $newSlide.append($currentGrid);
+                $currentGrid = $('<div class="car-grid row mt-4"></div>');
+                itemCount = 0;
+            }
         });
         
-        // Verificar se há algum carro visível em todo o slide
-        const slidesWithVisibleCars = $('.car-slide').filter(function() {
-          return $(this).find('.car-item:visible').length > 0;
-        }).length;
-        
-        if (slidesWithVisibleCars === 0) {
-          // Nenhum carro encontrado em nenhum slide
-          const noItemsMsg = $('<div class="no-cars-found text-center w-100 my-5 p-4"><p>Nenhum carro encontrado nesta categoria.</p></div>');
-          $('.car-slide.active').append(noItemsMsg);
+        // Adicionar o último grid se tiver itens
+        if (itemCount > 0) {
+            $newSlide.append($currentGrid);
         }
-      });
-      
-      // Inicializar o carrossel
-      navegarParaSlide(1);
-      
-      console.log('Carrossel reescrito com sucesso - solução de emergência aplicada');
+        
+        // Adicionar o slide ao container
+        $container.html($newSlide);
+        
+        // Recriar a navegação se necessário
+        if ($itemsToShow.length > 8) {
+            $('.arrow-nav').prop('disabled', false);
+        } else {
+            $('.arrow-nav').prop('disabled', true);
+        }
     });
-  }
 });
 </script>
+
+<style>
+/* CSS para garantir que o layout funcione corretamente */
+.car-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.car-item {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+    padding: 0 15px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+    .car-item {
+        flex: 0 0 33.333% !important;
+        max-width: 33.333% !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .car-item {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .car-item {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+.no-cars-found {
+    width: 100%;
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    font-size: 18px;
+}
+</style>
 </body>
 </html>

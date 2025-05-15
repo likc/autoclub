@@ -87,7 +87,7 @@ function upload_image($file, $target_dir = "uploads/") {
         ];
     }
     
-    // Obter a extensão do arquivo - CORRIGIDO
+    // Obter a extensão do arquivo
     $original_filename = $file["name"];
     $extension = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
     
@@ -166,3 +166,4 @@ function upload_image($file, $target_dir = "uploads/") {
         ];
     }
 }
+?>

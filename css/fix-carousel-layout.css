@@ -1,0 +1,69 @@
+/* Correções CSS para o layout do carrossel */
+
+/* Garantir que o grid mantenha 4 colunas */
+.car-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.car-grid .car-item {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding: 0 15px;
+}
+
+/* Manter o espaçamento entre as linhas */
+.car-grid + .car-grid {
+    margin-top: 30px;
+}
+
+/* Responsivo */
+@media (max-width: 991px) {
+    .car-grid .car-item {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+    }
+}
+
+@media (max-width: 767px) {
+    .car-grid .car-item {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 575px) {
+    .car-grid .car-item {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Esconder carros com display none */
+.car-item:not(:visible) {
+    display: none !important;
+}
+
+/* Ajustes para o card quando filtrado */
+.car-item[style*="display: none"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Mensagem quando não há carros */
+.no-cars-found {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 40px;
+    text-align: center;
+}
+
+.no-cars-found p {
+    margin: 0;
+    font-size: 18px;
+    color: #888;
+}

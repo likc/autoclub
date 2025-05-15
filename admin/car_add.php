@@ -87,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 
-                $stmt->bind_param("siissdsdii", $model, $year, $mileage, $transmission, $shaken_expires, 
+                // CORRETO: 11 tipos para 11 variáveis - string, int, int, string, string, double, string, double, string, int, int
+                $stmt->bind_param("siissdsdsii", $model, $year, $mileage, $transmission, $shaken_expires, 
                                              $price, $installment_type, $monthly_payment, $image_filename, 
                                              $is_new, $is_popular);
                 

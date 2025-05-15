@@ -130,7 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 WHERE id = ?
             ");
             
-            $stmt->bind_param("sisssdssiiii", $model, $year, $mileage, $transmission, $shaken_expires, 
+            // CORRETO: 12 tipos para 12 variáveis - string, int, int, string, string, double, string, double, string, int, int, int
+            $stmt->bind_param("siissdsdsiii", $model, $year, $mileage, $transmission, $shaken_expires, 
                                          $price, $installment_type, $monthly_payment, $image_filename, 
                                          $is_new, $is_popular, $car_id);
             
@@ -403,4 +404,4 @@ $conn->close();
     });
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php include 'includes/footer.php';
