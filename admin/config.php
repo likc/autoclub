@@ -70,38 +70,13 @@ function show_alert() {
 function upload_image($file, $target_dir = "uploads/") {
     // Verificar se o diretório existe, senão cria
     if (!file_exists($target_dir)) {
-        mkdir($target_dir, 0777, true);
-    }
-    
-    // Gerar nome único para o arquivo
-    $timestamp = time();
-    $filename = basename($file["name"]);
-    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-    
-    // CORREÇÃO: Garantir que a extensão sempre esteja presente no nome do arquivo
-    if (empty($extension)) {
-        // Detectar o tipo MIME e atribuir uma extensão apropriada
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $finfo->file($file["tmp_name"]);
-        
-        switch ($mime_type) {
-            case 'image/jpeg':
-                $extension = 'jpg';
-                break;
-            case 'image/png':
-                $extension = 'png';
-                break;
-            case 'image/gif':
-                $extension = 'gif';
-                break;
-            default:
-                $extension = 'jpg'; // Default para imagens sem extensão
+        if (!mkdir($target_dir, 0755, true)) {
+            return [
+                'success' => false,
+                'message' => "Erro ao criar diretório de upload."
+            ];
         }
     }
-    
-    // Gerar nome único com a extensão garantida
-    $unique_name = $timestamp . "_" . bin2hex(random_bytes(8)) . "." . $extension;
-    $target_file = $target_dir . $unique_name;
     
     // Verificar se é uma imagem real
     $check = getimagesize($file["tmp_name"]);
@@ -112,6 +87,40 @@ function upload_image($file, $target_dir = "uploads/") {
         ];
     }
     
+    // Obter a extensão do arquivo - CORRIGIDO
+    $original_filename = $file["name"];
+    $extension = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
+    
+    // Se não conseguir detectar a extensão pelo nome, tentar detectar pelo MIME type
+    if (empty($extension)) {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->file($file["tmp_name"]);
+        
+        switch ($mime_type) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                $extension = 'jpg';
+                break;
+            case 'image/png':
+                $extension = 'png';
+                break;
+            case 'image/gif':
+                $extension = 'gif';
+                break;
+            case 'image/webp':
+                $extension = 'webp';
+                break;
+            default:
+                $extension = 'jpg'; // Default para imagens sem extensão
+        }
+    }
+    
+    // Gerar nome único para o arquivo COM EXTENSÃO
+    $timestamp = time();
+    $unique_id = bin2hex(random_bytes(8));
+    $unique_name = $timestamp . "_" . $unique_id . "." . $extension;
+    $target_file = $target_dir . $unique_name;
+    
     // Verificar o tamanho do arquivo
     if ($file["size"] > 5000000) { // 5MB
         return [
@@ -121,25 +130,39 @@ function upload_image($file, $target_dir = "uploads/") {
     }
     
     // Permitir apenas certos formatos de arquivo
-    $allowed_extensions = ["jpg", "jpeg", "png", "gif"];
+    $allowed_extensions = ["jpg", "jpeg", "png", "gif", "webp"];
     if (!in_array($extension, $allowed_extensions)) {
         return [
             'success' => false,
-            'message' => "Apenas arquivos JPG, JPEG, PNG e GIF são permitidos."
+            'message' => "Apenas arquivos JPG, JPEG, PNG, GIF e WEBP são permitidos."
         ];
     }
     
     // Tentar fazer o upload
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        return [
-            'success' => true,
-            'filename' => $unique_name,
-            'path' => $target_file
-        ];
+        // Verificar se o arquivo foi realmente movido
+        if (file_exists($target_file)) {
+            // Definir permissões do arquivo
+            chmod($target_file, 0644);
+            
+            // IMPORTANTE: Retornar o nome completo COM a extensão
+            return [
+                'success' => true,
+                'filename' => $unique_name,  // Este já tem a extensão incluída
+                'path' => $target_file,
+                'url' => SITE_URL . '/uploads/' . $unique_name
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => "Erro ao salvar o arquivo no servidor."
+            ];
+        }
     } else {
+        $error = error_get_last();
         return [
             'success' => false,
-            'message' => "Ocorreu um erro ao fazer o upload da imagem."
+            'message' => "Ocorreu um erro ao fazer o upload da imagem: " . ($error ? $error['message'] : 'Erro desconhecido')
         ];
     }
 }

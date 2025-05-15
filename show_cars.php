@@ -1,12 +1,9 @@
 <?php
 /**
  * Show Cars - Script para exibir os carros na página principal
- * 
- * Salve este arquivo na raiz do site (mesmo nível do index.php)
- * E então inclua/substitua a seção de carros no seu HTML principal
  */
 
-// Configuração do banco de dados (ajuste conforme suas configurações)
+// Configuração do banco de dados
 $db_host = 'localhost';
 $db_user = 'minec761_likc';
 $db_pass = 'rw23xrd807ox';
@@ -59,24 +56,17 @@ $conn->close();
 
 <!-- Carrossel com 2 andares por página -->
 <div class="simple-car-slider">
-    <!-- Slide Container -->
     <div class="slides-container">
-        <!-- Slide 1 (inicialmente visível) -->
         <div class="car-slide active" data-slide="1">
-            <!-- Primeira linha de carros (andar 1) -->
             <div class="car-grid row">
                 <?php
-                // Contador para controlar quando criar uma nova linha
                 $count = 0;
                 
-                // Loop pelos carros
                 foreach ($cars as $car):
-                    // Criar uma nova linha após 4 carros
                     if ($count === 4):
                         echo '</div><div class="car-grid row mt-4">';
                     endif;
                     
-                    // Criar a string de categoria para o atributo data-category
                     $categories_str = implode(' ', $car['categories']);
                 ?>
                     <div class="col-lg-3 col-md-6 col-sm-6 mb-4 car-item" data-category="<?php echo $categories_str; ?>">
@@ -94,36 +84,86 @@ $conn->close();
                             
                             <div class="car-card__image">
                                 <?php
-                                // Correção para garantir que o caminho completo da imagem seja usado
-                                $image_filename = $car['image']; // Nome do arquivo no banco de dados
+                                // Obter o nome da imagem do banco
+                                $image_filename = trim($car['image']);
+                                $image_path = '';
+                                $found = false;
                                 
-                                // Verificar se o arquivo existe
-                                $image_path = "admin/uploads/{$image_filename}";
+                                // Primeiro, tentar com o nome exato do banco
+                                if (!empty($image_filename)) {
+                                    $test_path = 'admin/uploads/' . $image_filename;
+                                    if (file_exists($test_path)) {
+                                        $image_path = $test_path;
+                                        $found = true;
+                                    }
+                                }
                                 
-                                if (!file_exists($image_path)) {
-                                    // Caso a imagem não seja encontrada, usar imagem padrão
-                                    $image_path = "img/car-default.jpg";
+                                // Se não encontrou e o nome não tem extensão, tentar adicionar
+                                if (!$found && !preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $image_filename)) {
+                                    $extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                                    $base_name = $image_filename;
+                                    
+                                    foreach ($extensions as $ext) {
+                                        $test_path = 'admin/uploads/' . $base_name . '.' . $ext;
+                                        if (file_exists($test_path)) {
+                                            $image_path = $test_path;
+                                            $found = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                // Se não encontrou, buscar arquivo com nome similar
+                                if (!$found && !empty($image_filename)) {
+                                    $upload_dir = 'admin/uploads/';
+                                    if (is_dir($upload_dir)) {
+                                        $files = scandir($upload_dir);
+                                        $base_name = pathinfo($image_filename, PATHINFO_FILENAME);
+                                        
+                                        foreach ($files as $file) {
+                                            if (strpos($file, $base_name) !== false) {
+                                                $image_path = $upload_dir . $file;
+                                                $found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                // Se ainda não encontrou, usar imagem padrão
+                                if (!$found || empty($image_filename)) {
+                                    $image_path = 'img/car-default.jpg';
+                                    if (!file_exists($image_path)) {
+                                        // Fallback final - placeholder externo
+                                        $image_path = 'https://via.placeholder.com/300x200?text=Sem+Imagem';
+                                    }
                                 }
                                 ?>
-                                <img src="<?php echo $image_path; ?>" alt="<?php echo $car['model']; ?>">
-                              <!--  <div class="car-card__overlay">
-                                    <a href="car-details.html?id=<?php echo $car['id']; ?>" class="btn btn-sm btn-outline">Ver Detalhes</a>
-                                </div>-->
+                                <img src="<?php echo htmlspecialchars($image_path); ?>" 
+                                     alt="<?php echo htmlspecialchars($car['model']); ?>"
+                                     onerror="this.src='img/car-default.jpg'; this.onerror=function(){this.src='https://via.placeholder.com/300x200?text=Sem+Imagem'};">
                             </div>
                             
                             <div class="car-card__content">
                                 <span class="car-card__year"><?php echo $car['year']; ?></span>
-                                <h3 class="car-card__title"><?php echo $car['model']; ?></h3>
+                                <h3 class="car-card__title"><?php echo htmlspecialchars($car['model']); ?></h3>
                                 <ul class="car-card__specs">
                                     <li><i class="fas fa-road"></i> <span><?php echo number_format($car['mileage'], 0, ',', '.'); ?></span> km</li>
-                                    <li><i class="fas fa-cog"></i> <span><?php echo $car['transmission']; ?></span> Automático</li>
+                                    <li><i class="fas fa-cog"></i> <span><?php echo $car['transmission']; ?></span></li>
                                     <li><i class="fas fa-calendar-alt"></i> Shaken: <span><?php echo $car['shaken_expires']; ?></span></li>
                                 </ul>
                                 <div class="car-card__price">
-                                    <span class="car-card__price-badge" style="background: <?php echo $car['installment_type'] === '120x' ? 'var(--accent)' : 'var(--primary)'; ?>;">Até <?php echo $car['installment_type']; ?></span>
-                                    <div class="car-card__price-amount">¥<?php echo number_format($car['monthly_payment'], 0, ',', '.'); ?><small>/Mês</small></div>
+                                    <span class="car-card__price-badge" style="background: <?php echo $car['installment_type'] === '120x' ? 'var(--accent)' : 'var(--primary)'; ?>;">
+                                        Até <?php echo $car['installment_type']; ?>
+                                    </span>
+                                    <div class="car-card__price-amount">
+                                        ¥<?php echo number_format($car['monthly_payment'], 0, ',', '.'); ?><small>/Mês</small>
+                                    </div>
                                 </div>
-                                <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20<?php echo urlencode($car['model']); ?>" class="btn btn-primary btn-block car-card__cta">Tenho Interesse</a>
+                                <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20tenho%20interesse%20no%20<?php echo urlencode($car['model']); ?>" 
+                                   class="btn btn-primary btn-block car-card__cta">
+                                    Tenho Interesse
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -131,12 +171,12 @@ $conn->close();
                     $count++;
                 endforeach; 
                 
-                // Se não houver carros, mostrar mensagem
                 if (empty($cars)):
                 ?>
                     <div class="col-12">
-                        <div class="alert text-center">
-                            <p>Nenhum carro encontrado.</p>
+                        <div class="alert alert-info text-center">
+                            <p>Nenhum carro disponível no momento.</p>
+                            <p>Entre em contato conosco para ver opções disponíveis!</p>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -144,19 +184,16 @@ $conn->close();
         </div>
     </div>
     
-    <!-- Navegação do Carrossel (mantido apenas por compatibilidade, já que agora só temos 1 slide) -->
+    <!-- Navegação do Carrossel -->
     <div class="simple-slider-nav">
-        <!-- Botão Anterior -->
         <button class="arrow-nav prev-arrow" disabled>
             <i class="fas fa-chevron-left"></i>
         </button>
         
-        <!-- Indicadores -->
         <div class="slider-indicators">
             <span class="indicator active" data-slide="1"></span>
         </div>
         
-        <!-- Botão Próximo -->
         <button class="arrow-nav next-arrow" disabled>
             <i class="fas fa-chevron-right"></i>
         </button>
