@@ -1,0 +1,72 @@
+/* Car Filters - Estilo otimizado e funcional */
+
+.car-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.car-filter-btn {
+    padding: 10px 24px;
+    background: rgba(34, 34, 34, 0.6);
+    border: 2px solid rgba(214, 156, 30, 0.4);
+    color: var(--light-dark);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.car-filter-btn:hover {
+    color: var(--light);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(214, 156, 30, 0.3);
+    background: rgba(214, 156, 30, 0.1);
+}
+
+.car-filter-btn.active {
+    background: var(--primary);
+    color: var(--light);
+    border-color: var(--primary);
+    box-shadow: 0 5px 20px rgba(214, 156, 30, 0.4);
+}
+
+.car-filter-btn:focus {
+    outline: none;
+}
+
+.car-filter-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .car-filters {
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    
+    .car-filter-btn {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .car-filters {
+        gap: 8px;
+    }
+    
+    .car-filter-btn {
+        padding: 6px 16px;
+        font-size: 13px;
+    }
+}

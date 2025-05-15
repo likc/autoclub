@@ -30,6 +30,7 @@ require_once 'load_site_config.php';
     <!-- CSS Principal -->
     <link rel="stylesheet" href="css/css-variables.css">
     <link rel="stylesheet" href="css/optimized.css">
+    <link rel="stylesheet" href="css/car-filters.css">
     <link rel="stylesheet" href="css/fix-carousel-layout.css">
 </head>
 <body>
