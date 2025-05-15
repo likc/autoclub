@@ -1,23 +1,24 @@
 <?php
-// Iniciar o script PHP
+// Carregar configurações do site
+require_once 'load_site_config.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClub - Seu sonho automotivo realizado no Japão</title>
+    <title><?php echo $site_configs['site_title']; ?></title>
     
     <!-- Meta informações -->
-    <meta name="description" content="AutoClub - Compre seu carro no Japão com financiamento facilitado. Acesso a leilões exclusivos e aprovação rápida, mesmo sem visto permanente.">
-    <meta name="keywords" content="carros Japão, financiamento carros Japão, brasileiros Japão, carros importados, AutoClub, shaken">
+    <meta name="description" content="<?php echo $site_configs['site_description']; ?>">
+    <meta name="keywords" content="<?php echo $site_configs['site_keywords']; ?>">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="img/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="img/favicon/favicon.svg" />
     <link rel="shortcut icon" href="img/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="AutoClub" />
+    <meta name="apple-mobile-web-app-title" content="<?php echo $site_configs['site_name']; ?>" />
     <link rel="manifest" href="img/favicon/site.webmanifest" />
     
     <!-- Font Awesome para ícones -->
@@ -45,12 +46,12 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <ul class="header__top__info">
                         <li><i class="fas fa-map-marker-alt"></i> Venha nos fazer uma visita! <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">abrir no mapa</a></li>
-                        <li><i class="fas fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:<?php echo $site_configs['site_email']; ?>"><?php echo $site_configs['site_email']; ?></a></li>
                     </ul>
                     <div class="header__top__social">
-                        <a href="tel:+818092815155"><i class="fas fa-phone-alt"></i> (080) 9281-5155</a>
-                        <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="tel:<?php echo $site_configs['site_phone']; ?>"><i class="fas fa-phone-alt"></i> <?php echo str_replace('+81', '(0)', $site_configs['site_phone']); ?></a>
+                        <a href="<?php echo $site_configs['facebook_url']; ?>" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="<?php echo $site_configs['instagram_url']; ?>" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
@@ -59,7 +60,7 @@
             <div class="header__nav">
                 <div class="header__logo">
                     <a href="index.php">
-                        <img src="img/logo.png" alt="AutoClub Logo">
+                        <img src="img/logo.png" alt="<?php echo $site_configs['site_name']; ?> Logo">
                     </a>
                 </div>
                 <nav class="header__menu">
@@ -71,7 +72,7 @@
                     </ul>
                 </nav>
                 <div class="header__cta">
-                    <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="btn btn-primary">Agendar Visita</a>
+                    <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=<?php echo urlencode($site_configs['whatsapp_visit_message']); ?>" class="btn btn-primary">Agendar Visita</a>
                 </div>
                 <div class="mobile-menu-toggle">
                     <span></span>
@@ -89,7 +90,7 @@
             <li><a href="#carros">Carros</a></li>
             <li><a href="#financiamento">Financiamento</a></li>
             <li><a href="shaken.php">Shaken</a></li>
-            <li><a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20uma%20visita" class="btn btn-primary">Agendar Visita</a></li>
+            <li><a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=<?php echo urlencode($site_configs['whatsapp_visit_message']); ?>" class="btn btn-primary">Agendar Visita</a></li>
         </ul>
     </div>
     <div class="mobile-menu-overlay"></div>
@@ -98,13 +99,13 @@
     <section class="hero" style="background-image: url('img/hero-bg.jpg');">
         <div class="container">
             <div class="hero__content">
-                <h1>Realize seu sonho automotivo no Japão</h1>
-                <p>Financiamento facilitado com ou sem visto permanente, acesso exclusivo aos melhores leilões do Japão.</p>
+                <h1><?php echo $site_configs['hero_title']; ?></h1>
+                <p><?php echo $site_configs['hero_subtitle']; ?></p>
                 <div class="hero__buttons">
-                    <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20orçamento" class="btn btn-primary btn-with-icon">
-                        <i class="fas fa-car"></i> Solicitar Orçamento
+                    <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=<?php echo urlencode($site_configs['whatsapp_budget_message']); ?>" class="btn btn-primary btn-with-icon">
+                        <i class="fas fa-car"></i> <?php echo $site_configs['hero_button_1_text']; ?>
                     </a>
-                    <a href="#financiamento" class="btn btn-outline">Saiba Mais</a>
+                    <a href="#financiamento" class="btn btn-outline"><?php echo $site_configs['hero_button_2_text']; ?></a>
                 </div>
             </div>
         </div>
@@ -115,8 +116,8 @@
         <div class="container">
             <div class="section-title">
                 <span>Nossos Serviços</span>
-                <h2>AutoClub oferece:</h2>
-                <p>Soluções completas para brasileiros que desejam adquirir veículos no Japão</p>
+                <h2><?php echo $site_configs['services_title']; ?></h2>
+                <p><?php echo $site_configs['services_subtitle']; ?></p>
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
@@ -124,7 +125,7 @@
                         <img src="img/services/auction.png" alt="Financiamento Japonês" class="service-card__icon">
                         <h3>Financiamento Japonês</h3>
                         <p>Financiamento com visto permanente ou um Hoshonim com visto permanente em até 120x sem entrada. Financiamento sem visto permanente em até 84x sem entrada.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20financiamento%20japonês" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20financiamento%20japonês" class="btn-link">
                             Saiba mais <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -134,7 +135,7 @@
                         <img src="img/services/services-2.png" alt="Financiamento Próprio" class="service-card__icon">
                         <h3>Financiamento Próprio</h3>
                         <p>Nunca foi tão fácil realizar o seu sonho! Aqui temos financiamento próprio e sem burocracias. Não há necessidade de ter um hoshonin e também não é necessário ter visto permanente.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20financiamento%20próprio" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20financiamento%20próprio" class="btn-link">
                             Saiba mais <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -144,7 +145,7 @@
                         <img src="img/services/auction.png" alt="Acesso aos Leilões" class="service-card__icon">
                         <h3>Acesso aos Leilões</h3>
                         <p>Temos acesso a todos os leilões do Japão, com isso é possível achar o carro do jeito que você sempre quis e com um ótimo preço. Mais de 5.000 veículos disponíveis semanalmente.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20acesso%20aos%20leilões" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20o%20acesso%20aos%20leilões" class="btn-link">
                             Saiba mais <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -154,7 +155,7 @@
                         <img src="img/services/guincho.png" alt="Guincho 24/7" class="service-card__icon">
                         <h3>Guincho 24/7</h3>
                         <p>Temos serviço de guincho disponível 24 horas por dia, 7 dias por semana. Assistência completa em qualquer emergência, em qualquer lugar do Japão.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20preciso%20solicitar%20um%20guincho" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20preciso%20solicitar%20um%20guincho" class="btn-link">
                             Solicitar <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -168,8 +169,8 @@
         <div class="container">
             <div class="section-title">
                 <span>NOSSOS CARROS</span>
-                <h2>Veículos Disponíveis</h2>
-                <p>Uma seleção premium de veículos para todos os gostos e necessidades</p>
+                <h2><?php echo $site_configs['cars_section_title']; ?></h2>
+                <p><?php echo $site_configs['cars_section_subtitle']; ?></p>
             </div>
             
             <!-- Filtros de Carros -->
@@ -186,13 +187,13 @@
                 <div class="row align-items-center">
                     <div class="col-lg-8 col-md-8">
                         <div class="not-found-content">
-                            <h2>Não achou o carro dos seus sonhos?</h2>
-                            <p>Entre em contato e conte para nós o que você está procurando.</p>
+                            <h2><?php echo $site_configs['cars_not_found_title']; ?></h2>
+                            <p><?php echo $site_configs['cars_not_found_text']; ?></p>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 text-right">
                         <div class="not-found-buttons">
-                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20estou%20procurando%20um%20carro%20específico" class="btn btn-primary">Fale conosco!</a>
+                            <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20estou%20procurando%20um%20carro%20específico" class="btn btn-primary">Fale conosco!</a>
                         </div>
                     </div>
                 </div>
@@ -211,7 +212,7 @@
                         <p>Oferecemos as melhores condições de financiamento para brasileiros no Japão</p>
                     </div>
                     <div class="about-content mb-4">
-                        <p>Na AutoClub, entendemos as dificuldades que os brasileiros enfrentam para adquirir um veículo no Japão. <br>Por isso, desenvolvemos opções de financiamento flexíveis que se adaptam à sua situação:</p>
+                        <p>Na <?php echo $site_configs['site_name']; ?>, entendemos as dificuldades que os brasileiros enfrentam para adquirir um veículo no Japão. <br>Por isso, desenvolvemos opções de financiamento flexíveis que se adaptam à sua situação:</p>
                         <br>
                         <ul class="about-list">
                             <li><i class="fas fa-check-circle"></i> <strong>Com visto permanente:</strong> Financiamento em até 120x sem entrada</li>
@@ -221,7 +222,7 @@
                             <li><i class="fas fa-check-circle"></i> <strong>Aprovação rápida:</strong> Resposta em até 48 horas úteis</li>
                         </ul>
                         
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20opções%20de%20financiamento" class="btn btn-primary">Consultar condições de financiamento</a>
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20opções%20de%20financiamento" class="btn btn-primary">Consultar condições de financiamento</a>
                     </div>
                 </div>
                 
@@ -238,7 +239,7 @@
                         <div class="section-title text-left">
                             <span>Por que nos escolher</span>
                             <h2>Vantagens de ser um cliente PREMIUM</h2>
-                            <p>Na AutoClub, oferecemos mais do que apenas carros, oferecemos uma experiência completa</p>
+                            <p>Na <?php echo $site_configs['site_name']; ?>, oferecemos mais do que apenas carros, oferecemos uma experiência completa</p>
                         </div>
                         <ul class="about-list">
                             <li><i class="fas fa-check-circle"></i> Acesso exclusivo aos maiores leilões de veículos do Japão</li>
@@ -247,18 +248,9 @@
                             <li><i class="fas fa-check-circle"></i> Assistência completa: desde a compra até a manutenção do seu veículo</li>
                             <li><i class="fas fa-check-circle"></i> Atendimento 24 horas via WhatsApp para emergências veiculares</li>
                         </ul>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20vantagens%20de%20ser%20um%20cliente%20premium" class="btn btn-primary">Torne-se um cliente Premium</a>
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20as%20vantagens%20de%20ser%20um%20cliente%20premium" class="btn btn-primary">Torne-se um cliente Premium</a>
                     </div>
                 </div>
-                <!-- VIDEO SOBRE NÓS
-				<div class="col-lg-6">
-                    <div class="about-video">
-                        <img src="img/about-img.jpg" alt="Vídeo sobre nós">
-                        <a href="#" class="play-btn">
-                            <i class="fas fa-play"></i>
-                        </a>
-                    </div>
-                </div> -->
             </div>
         </div>
     </section>
@@ -269,13 +261,13 @@
             <div class="row align-items-center">
                 <div class="col-lg-8 col-md-8">
                     <div class="cta-content">
-                        <h2>Pronto para realizar seu sonho automotivo?</h2>
-                        <p>Entre em contato agora mesmo e descubra as melhores opções para você.</p>
+                        <h2><?php echo $site_configs['cta_title']; ?></h2>
+                        <p><?php echo $site_configs['cta_subtitle']; ?></p>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 text-right">
                     <div class="cta-button">
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20fazer%20um%20orçamento" class="btn btn-white">Entrar em Contato</a>
+                        <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>?text=<?php echo urlencode($site_configs['whatsapp_budget_message']); ?>" class="btn btn-white">Entrar em Contato</a>
                     </div>
                 </div>
             </div>
@@ -294,11 +286,11 @@
                     </div>
                     <div class="col-lg-6 col-md-6 text-right">
                         <div class="footer-contact-buttons">
-                            <a href="tel:+818092815155" class="footer-contact-btn">
-                                <i class="fas fa-phone-alt"></i> (080) 9281-5155
+                            <a href="tel:<?php echo $site_configs['site_phone']; ?>" class="footer-contact-btn">
+                                <i class="fas fa-phone-alt"></i> <?php echo str_replace('+81', '(0)', $site_configs['site_phone']); ?>
                             </a>
-                            <a href="mailto:contato@autoclub.jp" class="footer-contact-btn">
-                                <i class="fas fa-envelope"></i> contato@autoclub.jp
+                            <a href="mailto:<?php echo $site_configs['site_email']; ?>" class="footer-contact-btn">
+                                <i class="fas fa-envelope"></i> <?php echo $site_configs['site_email']; ?>
                             </a>
                         </div>
                     </div>
@@ -333,8 +325,8 @@
                         <h3>Contato</h3>
                         <ul class="contact-info">
                             <li><i class="fas fa-map-marker-alt"></i> <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">Ver no mapa</a></li>
-                            <li><i class="fas fa-phone-alt"></i> <a href="tel:+818092815155">(080) 9281-5155</a></li>
-                            <li><i class="fas fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
+                            <li><i class="fas fa-phone-alt"></i> <a href="tel:<?php echo $site_configs['site_phone']; ?>"><?php echo str_replace('+81', '(0)', $site_configs['site_phone']); ?></a></li>
+                            <li><i class="fas fa-envelope"></i> <a href="mailto:<?php echo $site_configs['site_email']; ?>"><?php echo $site_configs['site_email']; ?></a></li>
                             <li><i class="fas fa-clock"></i> Segunda a Sábado: 9h às 18h</li>
                         </ul>
                     </div>
@@ -343,16 +335,16 @@
                     <div class="footer-widget">
                         <h3>Siga-nos</h3>
                         <div class="footer-social">
-                            <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                            <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fab fa-instagram"></i></a>
-                            <a href="https://wa.me/+818092815155" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            <a href="<?php echo $site_configs['facebook_url']; ?>" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="<?php echo $site_configs['instagram_url']; ?>" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/<?php echo $site_configs['site_phone']; ?>" target="_blank"><i class="fab fa-whatsapp"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>AutoClub 結 | Copyright &copy;<?php echo date('Y'); ?> - Todos os direitos reservados</p>
+                <p><?php echo $site_configs['site_name']; ?> 結 | Copyright &copy;<?php echo date('Y'); ?> - Todos os direitos reservados</p>
             </div>
         </div>
     </footer>

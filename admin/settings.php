@@ -86,15 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// Processar formulário de configurações do site
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_settings') {
-    // Aqui você pode adicionar a lógica para salvar configurações do site
-    // Por exemplo: nome do site, email de contato, etc.
-    
-    set_alert('success', 'Configurações do site atualizadas com sucesso!');
-    redirect('settings.php');
-}
-
 $conn->close();
 ?>
 
@@ -104,12 +95,12 @@ $conn->close();
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Configurações</h1>
+                <h1 class="m-0">Meu Perfil</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Configurações</li>
+                    <li class="breadcrumb-item active">Meu Perfil</li>
                 </ol>
             </div>
         </div>
@@ -123,7 +114,7 @@ $conn->close();
             <div class="col-md-6">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Perfil do Administrador</h3>
+                        <h3 class="card-title">Informações do Perfil</h3>
                     </div>
                     
                     <?php if (isset($_SESSION['form_errors'])): ?>
@@ -173,39 +164,8 @@ $conn->close();
                 </div>
             </div>
             
-            <!-- Configurações do Site -->
+            <!-- Informações e Links Úteis -->
             <div class="col-md-6">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Configurações do Site</h3>
-                    </div>
-                    <form method="POST" action="">
-                        <input type="hidden" name="action" value="update_settings">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="site_name">Nome do Site</label>
-                                <input type="text" class="form-control" id="site_name" name="site_name" value="AutoClub">
-                            </div>
-                            <div class="form-group">
-                                <label for="site_email">Email de Contato</label>
-                                <input type="email" class="form-control" id="site_email" name="site_email" value="contato@autoclub.jp">
-                            </div>
-                            <div class="form-group">
-                                <label for="site_whatsapp">WhatsApp de Contato</label>
-                                <input type="text" class="form-control" id="site_whatsapp" name="site_whatsapp" value="+818092815155">
-                                <small class="form-text text-muted">Formato: código do país + número completo, sem espaços</small>
-                            </div>
-                            
-                            <div class="alert alert-info">
-                                <p class="mb-0"><i class="fas fa-info-circle"></i> Observação: Esta funcionalidade requer configuração adicional para armazenar as configurações do site em um banco de dados. Por favor, entre em contato com o desenvolvedor para habilitar esta funcionalidade.</p>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Salvar Configurações</button>
-                        </div>
-                    </form>
-                </div>
-                
                 <!-- Link para criar novo administrador -->
                 <div class="card card-primary">
                     <div class="card-header">
@@ -215,6 +175,35 @@ $conn->close();
                         <p>Crie contas de administrador adicionais para gerenciar o sistema.</p>
                         <a href="create_admin.php" class="btn btn-primary">
                             <i class="fas fa-user-plus"></i> Adicionar Novo Administrador
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Link para configurações do site -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Configurações do Site</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Gerencie as configurações gerais do site, textos, informações de contato e muito mais.</p>
+                        <a href="site_settings.php" class="btn btn-primary">
+                            <i class="fas fa-cogs"></i> Ir para Configurações do Site
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Informação sobre a sessão -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">Informações da Sessão</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Usuário:</strong> <?php echo htmlspecialchars($admin['username']); ?></p>
+                        <p><strong>Nome:</strong> <?php echo htmlspecialchars($admin['name']); ?></p>
+                        <p><strong>ID do Administrador:</strong> <?php echo $admin_id; ?></p>
+                        <hr>
+                        <a href="logout.php" class="btn btn-danger">
+                            <i class="fas fa-sign-out-alt"></i> Sair do Sistema
                         </a>
                     </div>
                 </div>

@@ -345,4 +345,4 @@ $conn->close();
     });
 </script>
 
-<?php include 'includes/footer.php'; ?
+<?php include 'includes/footer.php';

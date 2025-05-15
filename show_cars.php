@@ -150,7 +150,7 @@ $conn->close();
                                 <ul class="car-card__specs">
                                     <li><i class="fas fa-road"></i> <span><?php echo number_format($car['mileage'], 0, ',', '.'); ?></span> km</li>
                                     <li><i class="fas fa-cog"></i> <span><?php echo $car['transmission']; ?></span></li>
-                                    <li><i class="fas fa-calendar-alt"></i> Shaken: <span><?php echo $car['shaken_expires']; ?></span></li>
+                                    <li><i class="fas fa-calendar-alt"></i> Shaken: <span> <?php echo $car['shaken_expires']; ?></span></li>
                                 </ul>
                                 <div class="car-card__price">
                                     <span class="car-card__price-badge" style="background: <?php echo $car['installment_type'] === '120x' ? 'var(--accent)' : 'var(--primary)'; ?>;">
