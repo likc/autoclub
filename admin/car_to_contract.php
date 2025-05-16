@@ -46,7 +46,10 @@ $redirect_url = 'contract_edit.php?' . http_build_query([
     'vehicle_value' => $car['price'],
     'consumption_tax' => round($car['price'] * 0.1), // 10% do valor do carro
     'gps_value' => 76000, // Valor padrão, ajustar conforme necessário
+    'shaken_value' => 0, // Adicionar campo para o valor do Shaken
+    'annual_tax' => 0, // Adicionar campo para o imposto anual
     'transfer_delivery' => 30000, // Valor padrão, ajustar conforme necessário
+    'kaitori_value' => 0, // Adicionar campo para o valor do Kaitori
     'total_value' => $car['price'] + round($car['price'] * 0.1) + 76000 + 30000 // Soma inicial
 ]);
 

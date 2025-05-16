@@ -87,8 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 WHERE id = ?
             ");
             
+            // 23 parâmetros de campos + 1 para WHERE = 24 parâmetros no total
             $stmt->bind_param(
-                "ssssssssssssssiiddddddi",
+                "ssssssssssssssiidddddddi",
                 $client_name, $client_id, $client_address, $client_phone1, $client_phone2,
                 $payment_method, $seller, $date, $vehicle_name, $vehicle_plate,
                 $vehicle_year, $vehicle_chassis, $vehicle_katashiki, $vehicle_color,
@@ -121,8 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 )
             ");
             
+            // 24 parâmetros - verifique se a string de tipos corresponde exatamente ao número de parâmetros
             $stmt->bind_param(
-                "ssssssssssssssiiddddddi",
+                "ssssssssssssssiidddddddi",
                 $client_name, $client_id, $client_address, $client_phone1, $client_phone2,
                 $payment_method, $seller, $date, $vehicle_name, $vehicle_plate,
                 $vehicle_year, $vehicle_chassis, $vehicle_katashiki, $vehicle_color,
@@ -144,6 +146,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+}
+
+// Pré-preencher dados do veículo se solicitado
+if (!$is_edit && isset($_GET['pre_fill']) && $_GET['pre_fill'] == '1') {
+    $contract = [
+        'vehicle_name' => isset($_GET['vehicle_name']) ? $_GET['vehicle_name'] : '',
+        'vehicle_plate' => isset($_GET['vehicle_plate']) ? $_GET['vehicle_plate'] : '',
+        'vehicle_year' => isset($_GET['vehicle_year']) ? $_GET['vehicle_year'] : '',
+        'vehicle_chassis' => isset($_GET['vehicle_chassis']) ? $_GET['vehicle_chassis'] : '',
+        'vehicle_katashiki' => isset($_GET['vehicle_katashiki']) ? $_GET['vehicle_katashiki'] : '',
+        'vehicle_color' => isset($_GET['vehicle_color']) ? $_GET['vehicle_color'] : '',
+        'vehicle_mileage' => isset($_GET['vehicle_mileage']) ? $_GET['vehicle_mileage'] : 0,
+        'vehicle_value' => isset($_GET['vehicle_value']) ? $_GET['vehicle_value'] : 0,
+        'consumption_tax' => isset($_GET['consumption_tax']) ? $_GET['consumption_tax'] : 0,
+        'gps_value' => isset($_GET['gps_value']) ? $_GET['gps_value'] : 76000,
+        'shaken_value' => isset($_GET['shaken_value']) ? $_GET['shaken_value'] : 0,
+        'annual_tax' => isset($_GET['annual_tax']) ? $_GET['annual_tax'] : 0,
+        'transfer_delivery' => isset($_GET['transfer_delivery']) ? $_GET['transfer_delivery'] : 30000,
+        'kaitori_value' => isset($_GET['kaitori_value']) ? $_GET['kaitori_value'] : 0,
+        'total_value' => isset($_GET['total_value']) ? $_GET['total_value'] : 0,
+        'seller' => 'ANDERSON RAMOS',
+        'payment_method' => 'FINANCIAMENTO AUTO CLUB',
+        'date' => date('Y-m-d')
+    ];
 }
 
 $conn->close();

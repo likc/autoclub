@@ -120,14 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->bind_param("ii", $car_id, $category_id);
                 $stmt->execute();
                 
-// Confirmar transação
-$conn->commit();
+                // Confirmar transação
+                $conn->commit();
 
-// Registrar atividade
-log_admin_activity("Adicionou o veículo: " . $model . " (" . $year . ")", "add", $car_id, "car");
+                // Registrar atividade
+                log_admin_activity("Adicionou o veículo: " . $model . " (" . $year . ")", "add", $car_id, "car");
 
-set_alert('success', 'Veículo adicionado com sucesso!');
-redirect('cars.php');
+                set_alert('success', 'Veículo adicionado com sucesso!');
+                redirect('cars.php');
             } catch (Exception $e) {
                 // Reverter transação em caso de erro
                 $conn->rollback();

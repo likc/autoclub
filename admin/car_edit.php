@@ -163,9 +163,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
             
             // CORRETO: 14 tipos para 14 variáveis
-            $stmt->bind_param("siissdsdsisssi", $model, $year, $mileage, $transmission, $shaken_expires, 
-                                         $price, $installment_type, $monthly_payment, $image_filename, 
-                                         $is_new, $is_popular, $custom_highlight, $highlight_color, $car_id);
+            $stmt->bind_param("siissdsdsissi", $model, $year, $mileage, $transmission, $shaken_expires, 
+                                     $price, $installment_type, $monthly_payment, $image_filename, 
+                                     $is_new, $is_popular, $custom_highlight, $highlight_color, $car_id);
             
             $stmt->execute();
             
@@ -386,16 +386,16 @@ $conn->close();
                         </div>
                         
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                            <a href="cars.php" class="btn btn-default">Cancelar</a>
-                            
-                            <!-- Botão para gerar contrato -->
-                            <?php if (is_admin() && isset($car_id)): ?>
-                            <a href="car_to_contract.php?car_id=<?php echo $car_id; ?>" class="btn btn-info ml-2">
-                                <i class="fas fa-file-contract"></i> Gerar Contrato
-                            </a>
-                            <?php endif; ?>
-                        </div>
+    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    <a href="cars.php" class="btn btn-default">Cancelar</a>
+    
+    <!-- Botão para gerar contrato -->
+    <?php if (is_admin() && isset($car_id)): ?>
+    <a href="car_to_contract.php?car_id=<?php echo $car_id; ?>" class="btn btn-info ml-2">
+        <i class="fas fa-file-contract"></i> Gerar Contrato
+    </a>
+    <?php endif; ?>
+</div>
                     </form>
                 </div>
             </div>
