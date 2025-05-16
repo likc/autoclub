@@ -66,8 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("ssss", $username, $password_hash, $name, $role);
         
         if ($stmt->execute()) {
-            $success = "Usuário criado com sucesso!";
-            
             // Registrar atividade se estiver logado
             if (is_logged_in()) {
                 $role_text = ($role === 'admin') ? 'administrador' : 'moderador';
@@ -78,214 +76,116 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!is_logged_in()) {
                 set_alert('success', 'Sua conta de administrador foi criada. Agora você pode fazer login.');
                 redirect('login.php');
+            } else {
+                set_alert('success', 'Novo usuário criado com sucesso!');
+                redirect('admins.php');
             }
         } else {
             $errors[] = "Erro ao criar usuário: " . $conn->error;
         }
     }
-    
-    $conn->close();
 }
+
+$conn->close();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Usuário - <?php echo SITE_NAME; ?></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Bootstrap 4 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <!-- Google Font: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #d69c1e;
-            --primary-light: #e6ae30;
-            --dark: #151515;
-            --dark-medium: #222222;
-            --light: #ffffff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .form-container {
-            background-color: var(--dark-medium);
-            border-radius: 8px;
-            width: 100%;
-            max-width: 500px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .logo img {
-            height: 60px;
-        }
-        
-        h1 {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--primary);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(0, 0, 0, 0.2);
-            color: var(--light);
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(214, 156, 30, 0.3);
-        }
-        
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: var(--light);
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        button:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-        }
-        
-        .alert {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-danger {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #e74c3c;
-        }
-        
-        .alert-success {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .back-link:hover {
-            color: var(--primary-light);
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <div class="logo">
-            <img src="../img/logo.png" alt="<?php echo SITE_NAME; ?>">
+<?php include 'includes/header.php'; ?>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Adicionar Novo Usuário</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="admins.php">Usuários</a></li>
+                    <li class="breadcrumb-item active">Adicionar Novo</li>
+                </ol>
+            </div>
         </div>
-        
-        <h1>Criar Novo Usuário</h1>
-        
-        <?php if (isset($errors) && !empty($errors)): ?>
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
-        
-        <?php if (isset($success)): ?>
-            <div class="alert alert-success">
-                <?php echo $success; ?>
-            </div>
-        <?php endif; ?>
-        
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="username">Nome de Usuário</label>
-                <input type="text" id="username" name="username" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required>
-                <small style="color: #aaa;">A senha deve ter pelo menos 6 caracteres.</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="name">Nome Completo</label>
-                <input type="text" id="name" name="name" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
-            </div>
-            
-            <div class="form-group">
-                <label for="role">Cargo</label>
-                <select id="role" name="role" required>
-                    <option value="admin" <?php echo (isset($_POST['role']) && $_POST['role'] === 'admin') ? 'selected' : ''; ?>>Administrador</option>
-                    <option value="moderator" <?php echo (isset($_POST['role']) && $_POST['role'] === 'moderator') ? 'selected' : ''; ?>>Moderador</option>
-                </select>
-            </div>
-            
-            <button type="submit">Criar Usuário</button>
-        </form>
-        
-        <?php if (is_logged_in()): ?>
-            <a href="dashboard.php" class="back-link">
-                <i class="fas fa-arrow-left"></i> Voltar para o Dashboard
-            </a>
-        <?php else: ?>
-            <a href="login.php" class="back-link">
-                <i class="fas fa-arrow-left"></i> Voltar para o Login
-            </a>
-        <?php endif; ?>
     </div>
-</body>
-</html>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Informações do Usuário</h3>
+                    </div>
+                    
+                    <?php if (isset($errors) && !empty($errors)): ?>
+                        <div class="alert alert-danger m-3">
+                            <h5><i class="icon fas fa-ban"></i> Erro!</h5>
+                            <ul class="mb-0">
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?php echo $error; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form method="POST" action="">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="username">Nome de Usuário</label>
+                                <input type="text" class="form-control" id="username" name="username" required value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Senha</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <small class="form-text text-muted">A senha deve ter pelo menos 6 caracteres.</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="name">Nome Completo</label>
+                                <input type="text" class="form-control" id="name" name="name" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="role">Cargo</label>
+                                <select class="form-control" id="role" name="role" required>
+                                    <option value="admin" <?php echo (isset($_POST['role']) && $_POST['role'] === 'admin') ? 'selected' : ''; ?>>Administrador</option>
+                                    <option value="moderator" <?php echo (isset($_POST['role']) && $_POST['role'] === 'moderator') ? 'selected' : ''; ?>>Moderador</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Criar Usuário</button>
+                            <a href="admins.php" class="btn btn-default">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">Informações</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><i class="fas fa-info-circle"></i> Ao criar um novo usuário, você está concedendo acesso ao painel administrativo.</p>
+                        
+                        <h5 class="mt-4">Diferenças entre os cargos:</h5>
+                        <ul>
+                            <li><strong>Administrador:</strong> Acesso completo a todas as funcionalidades, incluindo gerenciamento de usuários, configurações do sistema e logs.</li>
+                            <li><strong>Moderador:</strong> Acesso limitado. Pode gerenciar veículos e conteúdo, mas não pode modificar configurações do sistema ou gerenciar outros usuários.</li>
+                        </ul>
+                        
+                        <div class="alert alert-warning mt-4">
+                            <h5><i class="icon fas fa-exclamation-triangle"></i> Atenção!</h5>
+                            <p>Lembre-se de usar senhas fortes e não compartilhar credenciais de acesso.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php include 'includes/footer.php'; ?>

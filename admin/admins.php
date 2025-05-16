@@ -72,11 +72,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     $admin_count = $stmt->get_result()->fetch_assoc()['total'];
     
     // Verificar o cargo do usuário a ser excluído
-    $stmt = $conn->prepare("SELECT role FROM admins WHERE id = ?");
+    $stmt = $conn->prepare("SELECT role, name FROM admins WHERE id = ?");
     $stmt->bind_param("i", $admin_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    $admin_role = $result->fetch_assoc()['role'];
+    $admin_data = $result->fetch_assoc();
+    $admin_role = $admin_data['role'];
+    $admin_name = $admin_data['name'];
     
     // Se for o último administrador, não pode excluir
     if ($admin_count <= 1 && $admin_role === 'admin') {
@@ -84,24 +86,18 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
         redirect('admins.php');
     }
     
-    // Obter o nome do administrador para o log
-    $stmt = $conn->prepare("SELECT name FROM admins WHERE id = ?");
-    $stmt->bind_param("i", $admin_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $admin_name = $result->fetch_assoc()['name'];
-    
     // Excluir o administrador
     $stmt = $conn->prepare("DELETE FROM admins WHERE id = ?");
     $stmt->bind_param("i", $admin_id);
     
     if ($stmt->execute()) {
-        // Registrar atividade
-        log_admin_activity("Excluiu o administrador: " . $admin_name, "delete", $admin_id, "admin");
+        // Registrar atividade com o cargo correto
+        $role_text = ($admin_role === 'admin') ? 'administrador' : 'moderador';
+        log_admin_activity("Excluiu o {$role_text}: " . $admin_name, "delete", $admin_id, "admin");
         
-        set_alert('success', 'Administrador excluído com sucesso!');
+        set_alert('success', 'Usuário excluído com sucesso!');
     } else {
-        set_alert('danger', 'Erro ao excluir administrador: ' . $conn->error);
+        set_alert('danger', 'Erro ao excluir usuário: ' . $conn->error);
     }
     
     redirect('admins.php');
