@@ -31,7 +31,7 @@ $conn->close();
 // Verificar se é para visualizar ou fazer download
 $action = isset($_GET['action']) ? $_GET['action'] : 'view';
 
-// Caminho para a biblioteca FPDF (verifique se existe)
+// Caminho para a biblioteca FPDF
 $fpdf_path = 'includes/fpdf/fpdf.php';
 if (!file_exists($fpdf_path)) {
     set_alert('danger', 'Biblioteca FPDF não encontrada! Por favor, instale a biblioteca FPDF em includes/fpdf/.');
@@ -40,8 +40,10 @@ if (!file_exists($fpdf_path)) {
 
 require_once $fpdf_path;
 
-// Estender a classe FPDF para incluir recursos personalizados
 class ContractPDF extends FPDF {
+    // Margem ajustada para cláusulas
+    protected $clause_left_margin = 30;
+    
     function Header() {
         // Logo (verificar se existe)
         if (file_exists('img/logo.png')) {
@@ -50,7 +52,7 @@ class ContractPDF extends FPDF {
         
         // Título do contrato
         $this->SetFont('Arial', 'B', 15);
-        $this->Cell(0, 10, $this->normalizeText('CONTRATO DE LEASING'), 0, 1, 'C');
+        $this->Cell(0, 10, $this->fixText('CONTRATO DE LEASING'), 0, 1, 'C');
         $this->Ln(5);
     }
     
@@ -60,19 +62,19 @@ class ContractPDF extends FPDF {
         // Arial italic 8
         $this->SetFont('Arial', 'I', 8);
         // Número de página
-        $this->Cell(0, 10, $this->normalizeText('Página ') . $this->PageNo() . '/' . $this->AliasNbPages(), 0, 0, 'C');
+        $this->Cell(0, 10, $this->fixText('Página ') . $this->PageNo() . '/' . $this->AliasNbPages(), 0, 0, 'C');
     }
     
-    // Função que trata uniformemente textos com ou sem acentos
-    function normalizeText($text) {
-        if(preg_match('/[\x{4E00}-\x{9FBF}]/u', $text) || preg_match('/[\x{3040}-\x{309F}]/u', $text) || preg_match('/[\x{30A0}-\x{30FF}]/u', $text)) {
-            // Se contém caracteres japoneses, não usar utf8_decode
-            return $text;
+    // Versão aprimorada da normalização de texto
+    function fixText($text) {
+        if (function_exists('iconv')) {
+            return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $text);
+        } else {
+            return utf8_decode($text);
         }
-        return utf8_decode($text);
     }
     
-    // Função para verificar se há espaço suficiente para um conteúdo
+    // Função para verificar se há espaço suficiente
     function NeedNewPage($height) {
         return ($this->GetY() + $height > $this->PageBreakTrigger);
     }
@@ -80,20 +82,20 @@ class ContractPDF extends FPDF {
     // Função para criar a seção de informações
     function CreateSection($title, $border = 0) {
         $this->SetFont('Arial', 'B', 11);
-        $this->Cell(0, 8, $this->normalizeText($title), $border, 1, 'L');
+        $this->Cell(0, 8, $this->fixText($title), $border, 1, 'L');
         $this->SetFont('Arial', '', 10);
     }
     
     // Função para criar uma célula com campo e valor
     function CreateField($field, $value, $width1 = 60, $width2 = 0) {
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell($width1, 6, $this->normalizeText($field), 0, 0);
+        $this->Cell($width1, 6, $this->fixText($field), 0, 0);
         $this->SetFont('Arial', '', 9);
         
         if ($width2 > 0) {
-            $this->Cell($width2, 6, $this->normalizeText($value), 0, 1);
+            $this->Cell($width2, 6, $this->fixText($value), 0, 1);
         } else {
-            $this->Cell(0, 6, $this->normalizeText($value), 0, 1);
+            $this->Cell(0, 6, $this->fixText($value), 0, 1);
         }
     }
     
@@ -106,7 +108,7 @@ class ContractPDF extends FPDF {
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 9);
         for($i=0; $i<count($headers); $i++) {
-            $this->Cell($w[$i], 7, $this->normalizeText($headers[$i]), 1, 0, 'C', true);
+            $this->Cell($w[$i], 7, $this->fixText($headers[$i]), 1, 0, 'C', true);
         }
         $this->Ln();
         
@@ -115,10 +117,10 @@ class ContractPDF extends FPDF {
         $this->SetFillColor(240, 240, 240);
         $fill = false;
         foreach($data as $row) {
-            $this->Cell($w[0], 6, $this->normalizeText($row[0]), 'LR', 0, 'L', $fill);
-            $this->Cell($w[1], 6, $this->normalizeText($row[1]), 'LR', 0, 'L', $fill);
-            $this->Cell($w[2], 6, $this->normalizeText($row[2]), 'LR', 0, 'R', $fill);
-            $this->Cell($w[3], 6, $this->normalizeText($row[3]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[0], 6, $this->fixText($row[0]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[1], 6, $this->fixText($row[1]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[2], 6, $this->fixText($row[2]), 'LR', 0, 'R', $fill);
+            $this->Cell($w[3], 6, $this->fixText($row[3]), 'LR', 0, 'L', $fill);
             $this->Ln();
             $fill = !$fill;
         }
@@ -127,31 +129,78 @@ class ContractPDF extends FPDF {
         $this->Ln(5);
     }
     
-    // Função para criar as cláusulas do contrato
-    function CreateClause($number, $text) {
-        // Estimar a altura necessária - aproximadamente 5 unidades por linha
-        $lines = ceil(strlen($text) / 90); // Caracteres por linha
-        $height = ($lines * 5) + 10; // Altura total estimada
+    // Versão melhorada para criar todas as cláusulas em uma página
+    function CreateAllClauses($clausulas) {
+        // Adicionar uma nova página dedicada para as cláusulas
+        $this->AddPage();
         
-        // Verificar se precisa de uma nova página
-        if ($this->NeedNewPage($height)) {
-            $this->AddPage();
+        $this->CreateSection('CLAUSULAS CONTRATUAIS', 0);
+        $this->Ln(5);
+        
+        // Layout melhorado - alinhamento tabular para cláusulas
+        $leftMargin = $this->GetX();
+        
+        foreach ($clausulas as $index => $clausula) {
+            $clauseNum = $index + 1;
+            
+            // Início da linha para alinhamento tabular
+            $this->SetX($leftMargin);
+            
+            // Número da cláusula em negrito
+            $this->SetFont('Arial', 'B', 9);
+            $clauseHeader = "CLÁUSULA $clauseNum:";
+            $this->Cell($this->clause_left_margin, 5, $this->fixText($clauseHeader), 0, 0);
+            
+            // Para cláusulas longas, usamos um sistema tabular
+            $this->SetFont('Arial', '', 9);
+            
+            // Calcular espaço disponível para o texto
+            $availableWidth = $this->GetPageWidth() - $this->clause_left_margin - $this->rMargin - $leftMargin;
+            
+            // Salvar posição X após imprimir o título da cláusula
+            $currentX = $this->GetX();
+            $currentY = $this->GetY();
+            
+            // Mover para posição de iniciar o MultiCell
+            $this->SetXY($currentX, $currentY);
+            
+            // Imprimir o texto da cláusula com MultiCell
+            $this->MultiCell($availableWidth, 5, $this->fixText($clausula), 0, 'J');
+            
+            // Adicionar espaço entre cláusulas
+            $this->Ln(2);
         }
         
+        $this->Ln(2);
+    }
+    
+    // Função para artigo especial com layout tabular
+    function CreateSpecialArticle($number, $text) {
+        $leftMargin = $this->GetX();
+        
+        // Início da linha para alinhamento tabular
+        $this->SetX($leftMargin);
+        
+        // Número do artigo em negrito
         $this->SetFont('Arial', 'B', 9);
-        $clauseHeader = "CLÁUSULA $number:";
-        $this->Cell(30, 6, $this->normalizeText($clauseHeader), 0, 0);
-        $this->SetFont('Arial', '', 9);
+        $articleHeader = "ARTIGO $number:";
+        $this->Cell($this->clause_left_margin, 5, $this->fixText($articleHeader), 0, 0);
         
-        // Se for uma cláusula curta
-        if ($lines <= 1) {
-            $this->Cell(0, 6, $this->normalizeText($text), 0, 1);
-        } else {
-            // Se for cláusula longa, usar MultiCell com posicionamento adequado
-            $this->Ln(6);
-            $this->MultiCell(0, 5, $this->normalizeText($text), 0, 'J');
-            $this->Ln(1);
-        }
+        // Calcular espaço disponível para o texto
+        $availableWidth = $this->GetPageWidth() - $this->clause_left_margin - $this->rMargin - $leftMargin;
+        
+        // Salvar posição atual
+        $currentX = $this->GetX();
+        $currentY = $this->GetY();
+        
+        // Mover para posição de iniciar o MultiCell
+        $this->SetXY($currentX, $currentY);
+        
+        // Imprimir o texto do artigo
+        $this->SetFont('Arial', '', 9);
+        $this->MultiCell($availableWidth, 5, $this->fixText($text), 0, 'J');
+        
+        $this->Ln(3);
     }
     
     // Função para criar campo de assinatura
@@ -165,9 +214,9 @@ class ContractPDF extends FPDF {
         $this->Cell(90, 6, str_repeat('_', 40), 0, 1, 'C');
         
         // Títulos
-        $this->Cell(90, 6, $this->normalizeText($left_title), 0, 0, 'C');
+        $this->Cell(90, 6, $this->fixText($left_title), 0, 0, 'C');
         $this->Cell(10, 6, '', 0, 0);
-        $this->Cell(90, 6, $this->normalizeText($right_title), 0, 1, 'C');
+        $this->Cell(90, 6, $this->fixText($right_title), 0, 1, 'C');
         
         $this->Ln(5);
     }
@@ -175,10 +224,24 @@ class ContractPDF extends FPDF {
     // Função para criar campo de data
     function CreateDateField($city = 'HAMAMATSU') {
         $this->Ln(5);
-        $this->Cell(25, 6, $this->normalizeText($city . ','), 0, 0);
-        $this->Cell(20, 6, $this->normalizeText('_______ DE'), 0, 0);
-        $this->Cell(45, 6, $this->normalizeText('____________________DE'), 0, 0);
-        $this->Cell(20, 6, $this->normalizeText('___________'), 0, 1);
+        $this->Cell(25, 6, $this->fixText($city . ','), 0, 0);
+        $this->Cell(20, 6, $this->fixText('_______ DE'), 0, 0);
+        $this->Cell(45, 6, $this->fixText('____________________DE'), 0, 0);
+        $this->Cell(20, 6, $this->fixText('___________'), 0, 1);
+    }
+    
+    // Esta função manipula diretamente as coordenadas para os dados bancários
+    function CreateBankData() {
+        $this->Ln(3);
+        $this->SetFont('Arial', 'B', 11);
+        $this->Cell(0, 8, $this->fixText('DADOS PARA DEPÓSITO'), 0, 1, 'L');
+        $this->Ln(5);
+        
+        $this->SetFont('Arial', '', 10);
+        
+        // Centralizar texto - usando hardcoded para garantir compatibilidade
+        $this->Cell(0, 6, 'Shizuoka Ginko (Banco Shizuoka) - Agencia Aritama - Conta Corrente 0408725', 0, 1, 'C');
+        $this->Cell(0, 6, 'RARAMOS PEREIRA ANDERSON', 0, 1, 'C');
     }
 }
 
@@ -243,16 +306,11 @@ $pdf->CreateField('TRANSFERENCIA E ENTREGA', formatYen($contract['transfer_deliv
 $pdf->CreateField('VALOR DO KAITORI', formatYen($contract['kaitori_value']));
 $pdf->CreateField('TOTAL', formatYen($contract['total_value']));
 
-// Adicionar as cláusulas contratuais
-$pdf->Ln(10);
-$pdf->CreateSection('CLAUSULAS CONTRATUAIS', 0);
-$pdf->Ln(5);
-
-// Cláusulas
+// Cláusulas contratuais
 $clausulas = [
     "Fica na responsabilidade do ARRENDATÁRIO(a) providenciar toda a documentação necessária para a transferência do veículo, no prazo máximo de 20 dias, o não cumprimento deste prazo será cobrado uma multa de ¥10.000.",
     
-    "Os pagamentos via depósitos bancários devem ser realizados com o ID (número de identificação do arrendatário(a), caso haja dificuldade entre em contato com a arrendadora pelo número 080 9281 5155.",
+    "Os pagamentos via depósitos bancários devem ser realizados com o ID (número de identificação do arrendatário(a)), caso haja dificuldade entre em contato com a arrendadora pelo número 080 9281 5155.",
     
     "O arrendatário pagará a quantia mensal discriminado no verso do contrato, caso não seja efetuada até a data que está estabelecida no contrato, a arrendadora cobrará ¥3.500 de multa pelo atraso e se a falta de pagamento ultrapassar 5 dias do contrato, a arrendadora poderá BLOQUEAR a partida do motor por controle remoto do terminal de GPS e reter o veículo, e a liberação somente será possível se o arrendatário(a) efetuar o pagamento da quantia mensal em atraso.",
     
@@ -271,17 +329,12 @@ $clausulas = [
     "ANTES DA ASSINATURA DESTE CONTRATO, CABE AO ARRENDATÁRIO(A) TESTAR E AVALIAR AS CONDIÇÕES DO BEM ARRENDADO."
 ];
 
-foreach ($clausulas as $index => $clausula) {
-    $pdf->CreateClause($index + 1, $clausula);
-    $pdf->Ln(3);
-}
+// Adicionar todas as cláusulas em uma única página
+$pdf->CreateAllClauses($clausulas);
 
-// Artigo 1 (tratado separadamente por ser formatado diferente)
-$pdf->SetFont('Arial', 'B', 9);
-$pdf->Cell(30, 6, $pdf->normalizeText("ARTIGO 1:"), 0, 0);
-$pdf->SetFont('Arial', '', 9);
-$pdf->MultiCell(0, 5, $pdf->normalizeText("O arrendatário(a) não terá o reembolso do que foi pago (como entrada de veículo, dinheiro em espécie, quantias pagas em dinheiro, etc.) e se compromete a devolver o veículo nas mesmas condições de conservação no ato da aquisição, bem como os acessórios instalados por solicitação do arrendatário(a) e todos os gastos com as despesas (caso seja necessário a arrendatária ter que buscar o veículo)."), 0, 'J');
-$pdf->Ln(3);
+// Artigo 1
+$artigo1 = "O arrendatário(a) não terá o reembolso do que foi pago (como entrada de veículo, dinheiro em espécie, quantias pagas em dinheiro, etc.) e se compromete a devolver o veículo nas mesmas condições de conservação no ato da aquisição, bem como os acessórios instalados por solicitação do arrendatário(a) e todos os gastos com as despesas (caso seja necessário a arrendatária ter que buscar o veículo).";
+$pdf->CreateSpecialArticle(1, $artigo1);
 
 // Campo de assinaturas
 $pdf->CreateSignature('VENDEDOR', 'COMPRADOR');
@@ -294,12 +347,33 @@ $pdf->AddPage();
 
 // Título da segunda página
 $pdf->SetFont('Arial', 'B', 15);
-$pdf->Cell(0, 10, $pdf->normalizeText('DETALHES DO LEASING'), 0, 1, 'C');
+$pdf->Cell(0, 10, $pdf->fixText('DETALHES DO LEASING'), 0, 1, 'C');
 $pdf->Ln(5);
 
 // Seção de Informações do Veículo (repetida)
 $pdf->CreateSection('INFORMACOES DO VEICULO', 0);
 $pdf->Ln(2);
+
+// Função auxiliar para extrair a marca do carro pelo nome
+function getCarBrand($carName) {
+    $brands = array(
+        'TOYOTA', 'HONDA', 'NISSAN', 'MAZDA', 'SUBARU', 'MITSUBISHI', 'SUZUKI', 'DAIHATSU',
+        'LEXUS', 'INFINITY', 'ACURA', 'BMW', 'MERCEDES', 'AUDI', 'VOLKSWAGEN', 'FORD', 
+        'CHEVROLET', 'HYUNDAI', 'KIA', 'FIAT', 'PEUGEOT', 'RENAULT', 'VOLVO', 'JAGUAR',
+        'LAND ROVER', 'PORSCHE', 'FERRARI', 'LAMBORGHINI', 'MASERATI', 'BENTLEY', 'ROLLS ROYCE'
+    );
+    
+    $carName = strtoupper($carName);
+    foreach ($brands as $brand) {
+        if (strpos($carName, $brand) !== false) {
+            return $brand;
+        }
+    }
+    
+    // Se não encontrar a marca, retornar as primeiras palavras do nome
+    $words = explode(' ', $carName);
+    return $words[0] . (isset($words[1]) ? ' ' . $words[1] : '');
+}
 
 // Grid para informações do veículo na segunda página
 $pdf->CreateField('MODELO DO CARRO', mb_strtoupper($contract['vehicle_name']));
@@ -347,18 +421,8 @@ for ($i = 1; $i <= 25; $i++) {
 // Criar tabela de pagamentos
 $pdf->CreateTable($headers, $payments);
 
-// Seção Dados para Depósito
-$pdf->Ln(10);
-$pdf->CreateSection('DADOS PARA DEPOSITO', 0);
-$pdf->Ln(5);
-
-// Informações bancárias - Aqui não usamos normalizeText para preservar caracteres japoneses
-$pdf->SetFont('Arial', '', 10);
-$bank_info = '静岡銀行 (Shizuoka Ginko) 有田支店 (Aritama) 普通口座 (Futsu) 0408725';
-$account_holder = 'RARAMOS PEREIRA ANDERSON (ラモス ペレイラ アンデルソン)';
-
-$pdf->Cell(0, 6, $bank_info, 0, 1, 'C');
-$pdf->Cell(0, 6, $account_holder, 0, 1, 'C');
+// Seção Dados para Depósito - com espaçamento reduzido
+$pdf->CreateBankData();
 
 // Campo de assinaturas
 $pdf->Ln(10);
@@ -386,25 +450,4 @@ if ($action == 'download') {
 } else {
     // Visualizar no navegador
     $pdf->Output();
-}
-
-// Função auxiliar para extrair a marca do carro pelo nome
-function getCarBrand($carName) {
-    $brands = array(
-        'TOYOTA', 'HONDA', 'NISSAN', 'MAZDA', 'SUBARU', 'MITSUBISHI', 'SUZUKI', 'DAIHATSU',
-        'LEXUS', 'INFINITY', 'ACURA', 'BMW', 'MERCEDES', 'AUDI', 'VOLKSWAGEN', 'FORD', 
-        'CHEVROLET', 'HYUNDAI', 'KIA', 'FIAT', 'PEUGEOT', 'RENAULT', 'VOLVO', 'JAGUAR',
-        'LAND ROVER', 'PORSCHE', 'FERRARI', 'LAMBORGHINI', 'MASERATI', 'BENTLEY', 'ROLLS ROYCE'
-    );
-    
-    $carName = strtoupper($carName);
-    foreach ($brands as $brand) {
-        if (strpos($carName, $brand) !== false) {
-            return $brand;
-        }
-    }
-    
-    // Se não encontrar a marca, retornar as primeiras palavras do nome
-    $words = explode(' ', $carName);
-    return $words[0] . (isset($words[1]) ? ' ' . $words[1] : '');
 }
