@@ -40,15 +40,18 @@ try {
     $stmt->bind_param("i", $car_id);
     $stmt->execute();
     
-    // Confirmar transação
-    $conn->commit();
-    
-    // Excluir a imagem
-    if (file_exists($image_path)) {
-        unlink($image_path);
-    }
-    
-    set_alert('success', 'Veículo excluído com sucesso!');
+// Confirmar transação
+$conn->commit();
+
+// Excluir a imagem
+if (file_exists($image_path)) {
+    unlink($image_path);
+}
+
+// Registrar atividade
+log_admin_activity("Excluiu o veículo ID: " . $car_id, "delete", $car_id, "car");
+
+set_alert('success', 'Veículo excluído com sucesso!');
 } catch (Exception $e) {
     // Reverter transação em caso de erro
     $conn->rollback();

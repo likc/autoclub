@@ -54,16 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sss", $username, $password_hash, $name);
         
         if ($stmt->execute()) {
-            $success = "Administrador criado com sucesso!";
-            
-            // Se não houver admin logado, redirecionar para o login
-            if (!is_logged_in()) {
-                set_alert('success', 'Sua conta de administrador foi criada. Agora você pode fazer login.');
-                redirect('login.php');
-            }
-        } else {
-            $errors[] = "Erro ao criar administrador: " . $conn->error;
-        }
+    $success = "Administrador criado com sucesso!";
+    
+    // Registrar atividade se estiver logado
+    if (is_logged_in()) {
+        log_admin_activity("Criou novo administrador: " . $name, "add", $conn->insert_id, "admin");
+    }
+    
+    // Se não houver admin logado, redirecionar para o login
+    if (!is_logged_in()) {
+        set_alert('success', 'Sua conta de administrador foi criada. Agora você pode fazer login.');
+        redirect('login.php');
+    }
+} else {
+    $errors[] = "Erro ao criar administrador: " . $conn->error;
+}
     }
     
     $conn->close();

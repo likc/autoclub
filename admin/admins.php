@@ -1,0 +1,150 @@
+<?php
+session_start();
+require_once 'config.php';
+check_login();
+
+$conn = db_connect();
+$current_admin_id = $_SESSION['admin_id'];
+
+// Processar exclusão de administrador
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+    $admin_id = (int)$_GET['id'];
+    
+    // Verificar se o admin está tentando excluir a si mesmo
+    if ($admin_id === $current_admin_id) {
+        set_alert('danger', 'Você não pode excluir seu próprio usuário!');
+        redirect('admins.php');
+    }
+    
+    // Verificar se é o último administrador
+    $count_query = $conn->query("SELECT COUNT(*) as total FROM admins");
+    $admin_count = $count_query->fetch_assoc()['total'];
+    
+    if ($admin_count <= 1) {
+        set_alert('danger', 'Não é possível excluir o último administrador do sistema!');
+        redirect('admins.php');
+    }
+    
+    // Excluir o administrador
+    $stmt = $conn->prepare("DELETE FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $admin_id);
+    
+if ($stmt->execute()) {
+    // Registrar atividade
+    log_admin_activity("Excluiu o administrador: " . $admin_name, "delete", $admin_id, "admin");
+    
+    set_alert('success', 'Administrador excluído com sucesso!');
+} else {
+    set_alert('danger', 'Erro ao excluir administrador: ' . $conn->error);
+}
+    
+    redirect('admins.php');
+}
+
+// Obter todos os administradores
+$admins_query = "SELECT * FROM admins ORDER BY id ASC";
+$admins = $conn->query($admins_query)->fetch_all(MYSQLI_ASSOC);
+
+$conn->close();
+?>
+
+<?php include 'includes/header.php'; ?>
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Gerenciar Administradores</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Administradores</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Lista de Administradores</h3>
+                        
+                        <div class="card-tools">
+                            <a href="create_admin.php" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Adicionar Novo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome de Usuário</th>
+                                    <th>Nome</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($admins as $admin): ?>
+                                    <tr>
+                                        <td><?php echo $admin['id']; ?></td>
+                                        <td><?php echo htmlspecialchars($admin['username']); ?></td>
+                                        <td><?php echo htmlspecialchars($admin['name']); ?></td>
+                                        <td>
+                                            <?php if ($admin['id'] == $current_admin_id): ?>
+                                                <span class="badge badge-info">Usuário Atual</span>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-danger btn-sm" 
+                                                        data-toggle="modal" 
+                                                        data-target="#deleteAdminModal<?php echo $admin['id']; ?>">
+                                                    <i class="fas fa-trash"></i> Remover
+                                                </button>
+                                                
+                                                <!-- Modal de Confirmação de Exclusão -->
+                                                <div class="modal fade" id="deleteAdminModal<?php echo $admin['id']; ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Confirmar Exclusão</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Tem certeza que deseja excluir o administrador <strong><?php echo htmlspecialchars($admin['name']); ?></strong>?</p>
+                                                                <p class="text-danger">Esta ação não pode ser desfeita!</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                                <a href="admins.php?action=delete&id=<?php echo $admin['id']; ?>" class="btn btn-danger">Excluir</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                
+                                <?php if (empty($admins)): ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center">Nenhum administrador encontrado.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php include 'includes/footer.php'; ?>

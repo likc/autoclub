@@ -71,13 +71,19 @@ $conn->close();
                 ?>
                     <div class="col-lg-3 col-md-6 col-sm-6 mb-4 car-item" data-category="<?php echo $categories_str; ?>">
                         <div class="car-card">
-                            <?php if ($car['is_new'] || $car['is_popular']): ?>
+                            <?php if ($car['is_new'] || $car['is_popular'] || !empty($car['custom_highlight'])): ?>
                                 <div class="car-card__badge">
-                                    <?php if ($car['is_new']): ?>
-                                        <span class="badge badge-primary">Novo</span>
-                                    <?php endif; ?>
-                                    <?php if ($car['is_popular']): ?>
-                                        <span class="badge badge-success">Popular</span>
+                                    <?php 
+                                    // Definir a cor do destaque (usar a cor personalizada ou a padrão)
+                                    $highlight_color = isset($car['highlight_color']) && !empty($car['highlight_color']) ? 
+                                                       htmlspecialchars($car['highlight_color']) : '#d6a300';
+                                                       
+                                    if ($car['is_new']): ?>
+                                        <span class="badge" style="background-color: <?php echo $highlight_color; ?>;">Novo</span>
+                                    <?php elseif ($car['is_popular']): ?>
+                                        <span class="badge" style="background-color: <?php echo $highlight_color; ?>;">Popular</span>
+                                    <?php elseif (!empty($car['custom_highlight'])): ?>
+                                        <span class="badge" style="background-color: <?php echo $highlight_color; ?>;"><?php echo htmlspecialchars($car['custom_highlight']); ?></span>
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>

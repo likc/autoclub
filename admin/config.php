@@ -6,7 +6,7 @@ define('DB_PASS', 'rw23xrd807ox');
 define('DB_NAME', 'minec761_autoclub');
 
 // Configurações do sistema
-define('SITE_NAME', 'AutoClub Painel Administrativo');
+define('SITE_NAME', 'Painel Administrativo');
 define('SITE_URL', 'https://autoclub.jp/admin');
 
 // Conexão com o banco de dados
@@ -25,6 +25,29 @@ function db_connect() {
 // Função para sanitizar entradas
 function sanitize($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
+
+// Função para registrar atividade do administrador
+function log_admin_activity($action, $action_type, $item_id = null, $item_type = null, $details = null) {
+    if (!is_logged_in()) {
+        return false;
+    }
+    
+    $conn = db_connect();
+    $admin_id = $_SESSION['admin_id'];
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    
+    $stmt = $conn->prepare("
+        INSERT INTO admin_logs (admin_id, action, action_type, item_id, item_type, details, ip_address)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("ississs", $admin_id, $action, $action_type, $item_id, $item_type, $details, $ip_address);
+    $result = $stmt->execute();
+    
+    $stmt->close();
+    $conn->close();
+    
+    return $result;
 }
 
 // Função para redirecionar

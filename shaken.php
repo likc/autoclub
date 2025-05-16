@@ -1,5 +1,36 @@
 <?php
 // Script PHP para página Shaken
+
+// Função para formatar número de telefone corretamente
+function format_phone_display($phone) {
+    $clean_phone = preg_replace('/[^0-9+]/', '', $phone);
+    
+    if (strpos($clean_phone, '+81') === 0) {
+        $local_number = '0' . substr($clean_phone, 3);
+        
+        if (strlen($local_number) == 11) {
+            $part1 = substr($local_number, 0, 3);
+            $part2 = substr($local_number, 3, 4);
+            $part3 = substr($local_number, 7, 4);
+            
+            return "({$part1}) {$part2}-{$part3}";
+        }
+    }
+    
+    if (strpos($clean_phone, '0') === 0 && strlen($clean_phone) == 11) {
+        $part1 = substr($clean_phone, 0, 3);
+        $part2 = substr($clean_phone, 3, 4);
+        $part3 = substr($clean_phone, 7, 4);
+        
+        return "({$part1}) {$part2}-{$part3}";
+    }
+    
+    return $phone;
+}
+
+// Número de telefone do site
+$site_phone = '+818092815155';
+$phone_display = format_phone_display($site_phone);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -48,7 +79,7 @@
                         <li><i class="fas fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
                     </ul>
                     <div class="header__top__social">
-                        <a href="tel:+818092815155"><i class="fas fa-phone-alt"></i> (080) 9281-5155</a>
+                        <a href="tel:<?php echo $site_phone; ?>"><i class="fas fa-phone-alt"></i> <?php echo $phone_display; ?></a>
                         <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
@@ -71,7 +102,7 @@
                     </ul>
                 </nav>
                 <div class="header__cta">
-                    <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20solicitar%20um%20Shaken" class="btn btn-primary">Solicitar Shaken</a>
+                    <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20solicitar%20um%20Shaken" class="btn btn-primary">Solicitar Shaken</a>
                 </div>
                 <div class="mobile-menu-toggle">
                     <span></span>
@@ -89,7 +120,7 @@
             <li><a href="index.php#carros">Carros</a></li>
             <li><a href="index.php#financiamento">Financiamento</a></li>
             <li class="active"><a href="shaken.php">Shaken</a></li>
-            <li><a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20solicitar%20um%20Shaken" class="btn btn-primary">Solicitar Shaken</a></li>
+            <li><a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20solicitar%20um%20Shaken" class="btn btn-primary">Solicitar Shaken</a></li>
         </ul>
     </div>
     <div class="mobile-menu-overlay"></div>
@@ -155,7 +186,7 @@
                         </div>
                         <h3>Inspeção Completa</h3>
                         <p>Realizamos uma inspeção detalhada para identificar qualquer problema que possa causar reprovação no Shaken. Avaliamos mais de 100 itens do veículo, incluindo sistema de freios, suspensão, emissão de gases, iluminação e muito mais.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20inspeção%20para%20Shaken" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20inspeção%20para%20Shaken" class="btn-link">
                             Saiba mais <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -168,7 +199,7 @@
                         </div>
                         <h3>Consultoria Técnica</h3>
                         <p>Identificamos todos os itens que precisam estar em conformidade para aprovação no Shaken. Fornecemos um relatório detalhado e recomendamos oficinas parceiras caso reparos sejam necessários, sempre com transparência e os melhores preços.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20consultoria%20técnica%20para%20Shaken" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20consultoria%20técnica%20para%20Shaken" class="btn-link">
                             Saiba mais <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -181,7 +212,7 @@
                         </div>
                         <h3>Documentação Completa</h3>
                         <p>Cuidamos de toda a burocracia do processo de Shaken. Preparamos e submetemos todos os documentos necessários, pagamos as taxas governamentais e impostos relacionados, e garantimos que tudo esteja em conformidade com as exigências japonesas.</p>
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20documentação%20do%20Shaken" class="btn-link">
+                        <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20documentação%20do%20Shaken" class="btn-link">
                             Saiba mais <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -234,7 +265,7 @@
             </div>
             
             <div class="text-center mt-5">
-                <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20Shaken" class="btn btn-primary">Agendar Meu Shaken</a>
+                <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20Shaken" class="btn btn-primary">Agendar Meu Shaken</a>
             </div>
         </div>
     </section>
@@ -293,7 +324,7 @@
                         </div>
                         
                         <div class="price-cta">
-                            <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento%20para%20Shaken" class="btn btn-primary">Solicitar Orçamento</a>
+                            <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento%20para%20Shaken" class="btn btn-primary">Solicitar Orçamento</a>
                         </div>
                     </div>
                 </div>
@@ -321,7 +352,7 @@
                 </div>
                 <div class="col-lg-4 col-md-4 text-right">
                     <div class="cta-button">
-                        <a href="https://wa.me/+818092815155?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20Shaken" class="btn btn-white">Agendar Shaken</a>
+                        <a href="https://wa.me/<?php echo $site_phone; ?>?text=Olá,%20vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20Shaken" class="btn btn-white">Agendar Shaken</a>
                     </div>
                 </div>
             </div>
@@ -340,8 +371,8 @@
                     </div>
                     <div class="col-lg-6 col-md-6 text-right">
                         <div class="footer-contact-buttons">
-                            <a href="tel:+818092815155" class="footer-contact-btn">
-                                <i class="fas fa-phone-alt"></i> (080) 9281-5155
+                            <a href="tel:<?php echo $site_phone; ?>" class="footer-contact-btn">
+                                <i class="fas fa-phone-alt"></i> <?php echo $phone_display; ?>
                             </a>
                             <a href="mailto:contato@autoclub.jp" class="footer-contact-btn">
                                 <i class="fas fa-envelope"></i> contato@autoclub.jp
@@ -379,7 +410,7 @@
                         <h3>Contato</h3>
                         <ul class="contact-info">
                             <li><i class="fas fa-map-marker-alt"></i> <a href="https://maps.app.goo.gl/gwVWEN16h6L25yjk6" target="_blank">Ver no mapa</a></li>
-                            <li><i class="fas fa-phone-alt"></i> <a href="tel:+818092815155">(080) 9281-5155</a></li>
+                            <li><i class="fas fa-phone-alt"></i> <a href="tel:<?php echo $site_phone; ?>"><?php echo $phone_display; ?></a></li>
                             <li><i class="fas fa-envelope"></i> <a href="mailto:contato@autoclub.jp">contato@autoclub.jp</a></li>
                             <li><i class="fas fa-clock"></i> Segunda a Sábado: 9h às 18h</li>
                         </ul>
@@ -391,7 +422,7 @@
                         <div class="footer-social">
                             <a href="https://www.facebook.com/anderson.premium.motors.japao/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                             <a href="https://www.instagram.com/AutoClub_anderson/" target="_blank"><i class="fab fa-instagram"></i></a>
-                            <a href="https://wa.me/+818092815155" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            <a href="https://wa.me/<?php echo $site_phone; ?>" target="_blank"><i class="fab fa-whatsapp"></i></a>
                         </div>
                     </div>
                 </div>

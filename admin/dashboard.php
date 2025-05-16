@@ -11,7 +11,7 @@ $total_cars = $result->fetch_assoc()['total'];
 
 // Carros por categoria
 $stmt = $conn->prepare("
-    SELECT c.name, COUNT(ccr.car_id) as count 
+    SELECT c.name, c.slug, COUNT(ccr.car_id) as count 
     FROM car_categories c
     LEFT JOIN car_category_relations ccr ON c.id = ccr.category_id
     WHERE c.slug != 'all'
@@ -77,9 +77,20 @@ $conn->close();
                                 <p>Carros <?php echo $category['name']; ?></p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-<?php echo $category['slug'] == 'kei' ? 'truck-pickup' : 'car-side'; ?>"></i>
+                                <?php
+                                // Corrigido: verifica se a chave 'slug' existe no array
+                                $icon_class = 'car'; // Ícone padrão
+                                if (isset($category['slug'])) {
+                                    if ($category['slug'] == 'kei') {
+                                        $icon_class = 'truck-pickup';
+                                    } else if ($category['slug'] == 'placa-branca') {
+                                        $icon_class = 'car-side';
+                                    }
+                                }
+                                ?>
+                                <i class="fas fa-<?php echo $icon_class; ?>"></i>
                             </div>
-                            <a href="cars.php?category=<?php echo $category['slug']; ?>" class="small-box-footer">
+                            <a href="cars.php?category=<?php echo isset($category['slug']) ? $category['slug'] : ''; ?>" class="small-box-footer">
                                 Ver todos <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -141,27 +152,27 @@ $conn->close();
                 </div>
             </div>
 
-            <!-- Botões de acesso rápido -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Acesso Rápido</h3>
-                        </div>
-                        <div class="card-body">
-                            <a href="car_add.php" class="btn btn-primary btn-lg mr-2">
-                                <i class="fas fa-plus-circle"></i> Adicionar Novo Veículo
-                            </a>
-                            <a href="cars.php" class="btn btn-info btn-lg mr-2">
-                                <i class="fas fa-car"></i> Gerenciar Veículos
-                            </a>
-                            <a href="categories.php" class="btn btn-success btn-lg">
-                                <i class="fas fa-tags"></i> Gerenciar Categorias
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<!-- Botões de acesso rápido -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Acesso Rápido</h3>
             </div>
+            <div class="card-body">
+                <a href="car_add.php" class="btn btn-primary btn-lg mr-2">
+                    <i class="fas fa-plus-circle"></i> Adicionar Novo Veículo
+                </a>
+                <a href="cars.php" class="btn btn-info btn-lg mr-2">
+                    <i class="fas fa-car"></i> Gerenciar Veículos
+                </a>
+                <a href="site_settings.php" class="btn btn-success btn-lg">
+                    <i class="fas fa-cogs"></i> Configurações do Site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 </div>

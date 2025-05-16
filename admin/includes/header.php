@@ -148,12 +148,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="categories.php" class="nav-link <?php echo $current_page == 'categories.php' ? 'active' : ''; ?>">
-                                <i class="nav-icon fas fa-tags"></i>
-                                <p>Categorias</p>
-                            </a>
-                        </li>
+                        
                         <li class="nav-item <?php echo in_array($current_page, ['settings.php', 'site_settings.php']) ? 'menu-open' : ''; ?>">
                             <a href="#" class="nav-link <?php echo in_array($current_page, ['settings.php', 'site_settings.php']) ? 'active' : ''; ?>">
                                 <i class="nav-icon fas fa-cog"></i>
@@ -175,6 +170,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                         <p>Configurações do Site</p>
                                     </a>
                                 </li>
+								<li class="nav-item">
+            <a href="admins.php" class="nav-link <?php echo $current_page == 'admins.php' ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Administradores</p>
+            </a>
+        </li>
+		<li class="nav-item">
+    <a href="admin_logs.php" class="nav-link <?php echo $current_page == 'admin_logs.php' ? 'active' : ''; ?>">
+        <i class="nav-icon fas fa-history"></i>
+        <p>Log de Atividades</p>
+    </a>
+</li>
                             </ul>
                         </li>
                     </ul>

@@ -185,9 +185,16 @@ $conn->close();
                                                     <?php echo $car['model']; ?>
                                                     <?php if ($car['is_new']): ?>
                                                         <span class="badge badge-success">Novo</span>
-                                                    <?php endif; ?>
-                                                    <?php if ($car['is_popular']): ?>
+                                                    <?php elseif ($car['is_popular']): ?>
                                                         <span class="badge badge-info">Popular</span>
+                                                    <?php elseif (!empty($car['custom_highlight'])): ?>
+                                                        <?php 
+                                                        // Usar a cor personalizada se definida, senão usar a cor padrão
+                                                        $highlight_color = !empty($car['highlight_color']) ? $car['highlight_color'] : '#d6a300'; 
+                                                        ?>
+                                                        <span class="badge" style="background-color: <?php echo $highlight_color; ?>; color: white;">
+                                                            <?php echo htmlspecialchars($car['custom_highlight']); ?>
+                                                        </span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?php echo $car['year']; ?></td>

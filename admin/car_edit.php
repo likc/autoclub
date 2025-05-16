@@ -32,15 +32,28 @@ $stmt = $conn->prepare("
 $stmt->bind_param("i", $car_id);
 $stmt->execute();
 $car_categories_result = $stmt->get_result();
-$car_categories = [];
+$selected_category_id = 0;
 
-while ($row = $car_categories_result->fetch_assoc()) {
-    $car_categories[] = $row['category_id'];
+if ($car_categories_result->num_rows > 0) {
+    $selected_category_id = $car_categories_result->fetch_assoc()['category_id'];
 }
 
 // Obter categorias específicas (apenas Kei e Placa Branca)
 $categories_query = "SELECT * FROM car_categories WHERE slug IN ('kei', 'placa-branca') ORDER BY name ASC";
 $categories = $conn->query($categories_query)->fetch_all(MYSQLI_ASSOC);
+
+// Determinar o tipo de destaque atual
+$highlight_type = '';
+$custom_highlight = $car['custom_highlight'] ?? '';
+$highlight_color = $car['highlight_color'] ?? '#d6a300';
+
+if ($car['is_new'] == 1) {
+    $highlight_type = 'new';
+} elseif ($car['is_popular'] == 1) {
+    $highlight_type = 'popular';
+} elseif (!empty($custom_highlight)) {
+    $highlight_type = 'custom';
+}
 
 // Processar o formulário quando enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -53,9 +66,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = (float)$_POST['price'];
     $installment_type = sanitize($_POST['installment_type']);
     $monthly_payment = (float)$_POST['monthly_payment'];
-    $is_new = isset($_POST['is_new']) ? 1 : 0;
-    $is_popular = isset($_POST['is_popular']) ? 1 : 0;
-    $selected_categories = isset($_POST['categories']) ? $_POST['categories'] : [];
+    $highlight_type = sanitize($_POST['highlight_type']);
+    $custom_highlight = sanitize($_POST['custom_highlight'] ?? '');
+    $highlight_color = sanitize($_POST['highlight_color'] ?? '#d6a300');
+    $category_id = (int)$_POST['category_id'];
+    
+    // Definir valores de destaque com base na seleção
+    $is_new = 0;
+    $is_popular = 0;
+    
+    if ($highlight_type === 'new') {
+        $is_new = 1;
+    } elseif ($highlight_type === 'popular') {
+        $is_popular = 1;
+    }
+    
+    // Se não for um destaque personalizado, limpar o campo
+    if ($highlight_type !== 'custom') {
+        $custom_highlight = '';
+    }
     
     // Validação básica
     $errors = [];
@@ -92,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "O valor da parcela mensal deve ser maior que zero.";
     }
     
-    if (empty($selected_categories)) {
-        $errors[] = "Selecione pelo menos uma categoria.";
+    if (empty($category_id)) {
+        $errors[] = "Selecione uma categoria.";
     }
     
     // Se não houver erros, atualizar os dados
@@ -129,38 +158,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 UPDATE cars 
                 SET model = ?, year = ?, mileage = ?, transmission = ?, shaken_expires = ?, 
                     price = ?, installment_type = ?, monthly_payment = ?, image = ?, 
-                    is_new = ?, is_popular = ? 
+                    is_new = ?, is_popular = ?, custom_highlight = ?, highlight_color = ? 
                 WHERE id = ?
             ");
             
-            // CORRETO: 12 tipos para 12 variáveis - string, int, int, string, string, double, string, double, string, int, int, int
-            $stmt->bind_param("siissdsdsiii", $model, $year, $mileage, $transmission, $shaken_expires, 
+            // CORRETO: 14 tipos para 14 variáveis
+            $stmt->bind_param("siissdsdsisssi", $model, $year, $mileage, $transmission, $shaken_expires, 
                                          $price, $installment_type, $monthly_payment, $image_filename, 
-                                         $is_new, $is_popular, $car_id);
+                                         $is_new, $is_popular, $custom_highlight, $highlight_color, $car_id);
             
             $stmt->execute();
             
-            // Excluir as relações de categoria antigas
-            $stmt = $conn->prepare("DELETE FROM car_category_relations WHERE car_id = ?");
-            $stmt->bind_param("i", $car_id);
-            $stmt->execute();
+            // Atualizar relação com categoria
+            $stmt = $conn->prepare("UPDATE car_category_relations SET category_id = ? WHERE car_id = ?");
+            $stmt->bind_param("ii", $category_id, $car_id);
             
-            // Inserir novas relações de categoria
-            foreach ($selected_categories as $category_id) {
-                $stmt = $conn->prepare("
-                    INSERT INTO car_category_relations (car_id, category_id)
-                    VALUES (?, ?)
-                ");
+            // Se a atualização falhar, pode ser porque a relação não existe
+            if (!$stmt->execute() || $stmt->affected_rows === 0) {
+                // Deletar relações antigas
+                $stmt = $conn->prepare("DELETE FROM car_category_relations WHERE car_id = ?");
+                $stmt->bind_param("i", $car_id);
+                $stmt->execute();
                 
+                // Inserir nova relação
+                $stmt = $conn->prepare("INSERT INTO car_category_relations (car_id, category_id) VALUES (?, ?)");
                 $stmt->bind_param("ii", $car_id, $category_id);
                 $stmt->execute();
             }
             
-            // Confirmar transação
-            $conn->commit();
-            
-            set_alert('success', 'Veículo atualizado com sucesso!');
-            redirect('cars.php');
+// Confirmar transação
+$conn->commit();
+
+// Registrar atividade
+log_admin_activity("Editou o veículo: " . $model . " (" . $year . ")", "edit", $car_id, "car");
+
+set_alert('success', 'Veículo atualizado com sucesso!');
+redirect('cars.php');
         } catch (Exception $e) {
             // Reverter transação em caso de erro
             $conn->rollback();
@@ -270,29 +303,60 @@ $conn->close();
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label>Categorias*</label>
-                                        <?php foreach ($categories as $category): ?>
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" name="categories[]" id="category_<?php echo $category['id']; ?>" value="<?php echo $category['id']; ?>" class="category-checkbox" <?php echo (in_array($category['id'], $car_categories)) ? 'checked' : ''; ?>>
-                                                <label for="category_<?php echo $category['id']; ?>"><?php echo $category['name']; ?></label>
-                                            </div>
-                                        <?php endforeach; ?>
+                                        <label for="category_id">Categoria*</label>
+                                        <select class="form-control" id="category_id" name="category_id" required>
+                                            <option value="">Selecione</option>
+                                            <?php foreach ($categories as $category): ?>
+                                                <option value="<?php echo $category['id']; ?>" <?php echo ($selected_category_id == $category['id']) ? 'selected' : ''; ?>>
+                                                    <?php echo $category['name']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label>Destaque</label>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" name="is_new" id="is_new" <?php echo ($car['is_new'] == 1) ? 'checked' : ''; ?>>
-                                                    <label for="is_new">Marcar como Novo</label>
+                                        <label for="highlight_type">Tipo de Destaque</label>
+                                        <select class="form-control" id="highlight_type" name="highlight_type">
+                                            <option value="" <?php echo ($highlight_type == '') ? 'selected' : ''; ?>>Sem Destaque</option>
+                                            <option value="new" <?php echo ($highlight_type == 'new') ? 'selected' : ''; ?>>Novo</option>
+                                            <option value="popular" <?php echo ($highlight_type == 'popular') ? 'selected' : ''; ?>>Popular</option>
+                                            <option value="custom" <?php echo ($highlight_type == 'custom') ? 'selected' : ''; ?>>Personalizado</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div id="highlight_options" style="display: <?php echo ($highlight_type != '') ? 'block' : 'none'; ?>;">
+                                        <div class="form-group" id="custom_highlight_group" style="display: <?php echo ($highlight_type == 'custom') ? 'block' : 'none'; ?>;">
+                                            <label for="custom_highlight">Destaque Personalizado</label>
+                                            <input type="text" class="form-control" id="custom_highlight" name="custom_highlight" placeholder="Ex: Oferta" value="<?php echo htmlspecialchars($custom_highlight); ?>">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="highlight_color">Cor do Destaque</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-palette"></i></span>
                                                 </div>
+                                                <input type="color" class="form-control" id="highlight_color" name="highlight_color" value="<?php echo htmlspecialchars($highlight_color); ?>">
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" name="is_popular" id="is_popular" <?php echo ($car['is_popular'] == 1) ? 'checked' : ''; ?>>
-                                                    <label for="is_popular">Marcar como Popular</label>
-                                                </div>
+                                            <small class="form-text text-muted">Selecione a cor para o badge de destaque</small>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Preview:</label>
+                                            <div>
+                                                <span id="highlight_preview" class="badge" style="background-color: <?php echo htmlspecialchars($highlight_color); ?>; color: white; font-size: 14px; padding: 5px 10px;">
+                                                    <?php 
+                                                    if ($highlight_type == 'new') {
+                                                        echo 'Novo';
+                                                    } elseif ($highlight_type == 'popular') {
+                                                        echo 'Popular';
+                                                    } elseif ($highlight_type == 'custom' && !empty($custom_highlight)) {
+                                                        echo htmlspecialchars($custom_highlight);
+                                                    } else {
+                                                        echo 'Preview';
+                                                    }
+                                                    ?>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -358,19 +422,49 @@ $conn->close();
             }
         });
         
-        // Remover lógica de selecionar todas as categorias
-        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-        // Verificar se todas as categorias estão selecionadas
-        function checkAllSelected() {
-            const allChecked = Array.from(categoryCheckboxes).every(checkbox => checkbox.checked);
+        // Controle de exibição para os campos de destaque
+        const highlightType = document.getElementById('highlight_type');
+        const highlightOptions = document.getElementById('highlight_options');
+        const customHighlightGroup = document.getElementById('custom_highlight_group');
+        const customHighlightInput = document.getElementById('custom_highlight');
+        const highlightColorInput = document.getElementById('highlight_color');
+        const highlightPreview = document.getElementById('highlight_preview');
+        
+        function updateHighlightPreview() {
+            highlightPreview.style.backgroundColor = highlightColorInput.value;
+            if (highlightType.value === 'custom' && customHighlightInput.value) {
+                highlightPreview.textContent = customHighlightInput.value;
+            } else if (highlightType.value === 'new') {
+                highlightPreview.textContent = 'Novo';
+            } else if (highlightType.value === 'popular') {
+                highlightPreview.textContent = 'Popular';
+            } else {
+                highlightPreview.textContent = 'Preview';
+            }
         }
         
-        categoryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', checkAllSelected);
-        });
+        function toggleHighlightOptions() {
+            if (highlightType.value === '') {
+                highlightOptions.style.display = 'none';
+            } else {
+                highlightOptions.style.display = 'block';
+                
+                if (highlightType.value === 'custom') {
+                    customHighlightGroup.style.display = 'block';
+                } else {
+                    customHighlightGroup.style.display = 'none';
+                }
+                
+                updateHighlightPreview();
+            }
+        }
         
-        // Verificar inicialmente
-        checkAllSelected();
+        highlightType.addEventListener('change', toggleHighlightOptions);
+        highlightColorInput.addEventListener('input', updateHighlightPreview);
+        customHighlightInput.addEventListener('input', updateHighlightPreview);
+        
+        // Verificar estado inicial
+        toggleHighlightOptions();
         
         // Calcular valor mensal automaticamente quando o preço ou tipo de parcelamento mudar
         const priceInput = document.getElementById('price');

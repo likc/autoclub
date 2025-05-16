@@ -73,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     if ($success) {
+        // Registrar atividade no log
+        log_admin_activity("Atualizou configurações de SEO", "edit", null, "setting", "SEO");
+        
         set_alert('success', 'Configurações de SEO atualizadas com sucesso!');
     } else {
         set_alert('danger', 'Erro ao atualizar SEO.');
@@ -99,6 +102,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     if ($success) {
+        // Registrar atividade no log
+        log_admin_activity("Atualizou configurações gerais do site", "edit", null, "setting", "Configurações Gerais");
+        
         set_alert('success', 'Configurações gerais atualizadas com sucesso!');
     } else {
         set_alert('danger', 'Erro ao atualizar algumas configurações.');
@@ -132,6 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     if ($success) {
+        // Registrar atividade no log
+        log_admin_activity("Atualizou textos da página inicial", "edit", null, "setting", "Textos da Página Inicial");
+        
         set_alert('success', 'Textos da página inicial atualizados com sucesso!');
     } else {
         set_alert('danger', 'Erro ao atualizar alguns textos.');
@@ -154,6 +163,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     if ($success) {
+        // Registrar atividade no log
+        log_admin_activity("Atualizou mensagens de WhatsApp", "edit", null, "setting", "Mensagens WhatsApp");
+        
         set_alert('success', 'Mensagens do WhatsApp atualizadas com sucesso!');
     } else {
         set_alert('danger', 'Erro ao atualizar mensagens.');
@@ -176,6 +188,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             // Renomear nova imagem para hero-bg.jpg
             $new_path = "../img/hero-bg.jpg";
             rename("../img/" . $upload_result['filename'], $new_path);
+            
+            // Registrar atividade no log
+            log_admin_activity("Atualizou imagem hero", "edit", null, "setting", "Imagem Hero");
             
             set_alert('success', 'Imagem hero atualizada com sucesso!');
         } else {
@@ -207,6 +222,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $stmt->bind_param("ssi", $question, $answer, $faq_id);
             $stmt->execute();
         }
+        
+        // Registrar atividade no log
+        log_admin_activity("Atualizou FAQs do Shaken", "edit", null, "setting", "FAQs Shaken");
         
         set_alert('success', 'FAQs do Shaken atualizadas com sucesso!');
     }
