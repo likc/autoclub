@@ -43,12 +43,14 @@ require_once $fpdf_path;
 // Estender a classe FPDF para incluir recursos personalizados
 class ContractPDF extends FPDF {
     function Header() {
-        // Logo
-        $this->Image('img/logo.png', 10, 10, 30);
+        // Logo (verificar se existe)
+        if (file_exists('img/logo.png')) {
+            $this->Image('img/logo.png', 10, 10, 30);
+        }
         
         // Título do contrato
         $this->SetFont('Arial', 'B', 15);
-        $this->Cell(0, 10, 'CONTRATO DE LEASING', 0, 1, 'C');
+        $this->Cell(0, 10, $this->normalizeText('CONTRATO DE LEASING'), 0, 1, 'C');
         $this->Ln(5);
     }
     
@@ -58,26 +60,40 @@ class ContractPDF extends FPDF {
         // Arial italic 8
         $this->SetFont('Arial', 'I', 8);
         // Número de página
-        $this->Cell(0, 10, 'Página ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->Cell(0, 10, $this->normalizeText('Página ') . $this->PageNo() . '/' . $this->AliasNbPages(), 0, 0, 'C');
+    }
+    
+    // Função que trata uniformemente textos com ou sem acentos
+    function normalizeText($text) {
+        if(preg_match('/[\x{4E00}-\x{9FBF}]/u', $text) || preg_match('/[\x{3040}-\x{309F}]/u', $text) || preg_match('/[\x{30A0}-\x{30FF}]/u', $text)) {
+            // Se contém caracteres japoneses, não usar utf8_decode
+            return $text;
+        }
+        return utf8_decode($text);
+    }
+    
+    // Função para verificar se há espaço suficiente para um conteúdo
+    function NeedNewPage($height) {
+        return ($this->GetY() + $height > $this->PageBreakTrigger);
     }
     
     // Função para criar a seção de informações
     function CreateSection($title, $border = 0) {
         $this->SetFont('Arial', 'B', 11);
-        $this->Cell(0, 8, $title, $border, 1, 'L');
+        $this->Cell(0, 8, $this->normalizeText($title), $border, 1, 'L');
         $this->SetFont('Arial', '', 10);
     }
     
     // Função para criar uma célula com campo e valor
     function CreateField($field, $value, $width1 = 60, $width2 = 0) {
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell($width1, 6, $field, 0, 0);
+        $this->Cell($width1, 6, $this->normalizeText($field), 0, 0);
         $this->SetFont('Arial', '', 9);
         
         if ($width2 > 0) {
-            $this->Cell($width2, 6, $value, 0, 1);
+            $this->Cell($width2, 6, $this->normalizeText($value), 0, 1);
         } else {
-            $this->Cell(0, 6, $value, 0, 1);
+            $this->Cell(0, 6, $this->normalizeText($value), 0, 1);
         }
     }
     
@@ -90,7 +106,7 @@ class ContractPDF extends FPDF {
         $this->SetFillColor(200, 200, 200);
         $this->SetFont('Arial', 'B', 9);
         for($i=0; $i<count($headers); $i++) {
-            $this->Cell($w[$i], 7, $headers[$i], 1, 0, 'C', true);
+            $this->Cell($w[$i], 7, $this->normalizeText($headers[$i]), 1, 0, 'C', true);
         }
         $this->Ln();
         
@@ -99,10 +115,10 @@ class ContractPDF extends FPDF {
         $this->SetFillColor(240, 240, 240);
         $fill = false;
         foreach($data as $row) {
-            $this->Cell($w[0], 6, $row[0], 'LR', 0, 'L', $fill);
-            $this->Cell($w[1], 6, $row[1], 'LR', 0, 'L', $fill);
-            $this->Cell($w[2], 6, $row[2], 'LR', 0, 'R', $fill);
-            $this->Cell($w[3], 6, $row[3], 'LR', 0, 'L', $fill);
+            $this->Cell($w[0], 6, $this->normalizeText($row[0]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[1], 6, $this->normalizeText($row[1]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[2], 6, $this->normalizeText($row[2]), 'LR', 0, 'R', $fill);
+            $this->Cell($w[3], 6, $this->normalizeText($row[3]), 'LR', 0, 'L', $fill);
             $this->Ln();
             $fill = !$fill;
         }
@@ -113,20 +129,27 @@ class ContractPDF extends FPDF {
     
     // Função para criar as cláusulas do contrato
     function CreateClause($number, $text) {
+        // Estimar a altura necessária - aproximadamente 5 unidades por linha
+        $lines = ceil(strlen($text) / 90); // Caracteres por linha
+        $height = ($lines * 5) + 10; // Altura total estimada
+        
+        // Verificar se precisa de uma nova página
+        if ($this->NeedNewPage($height)) {
+            $this->AddPage();
+        }
+        
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell(30, 6, "CLÁUSULA $number:", 0, 0);
+        $clauseHeader = "CLÁUSULA $number:";
+        $this->Cell(30, 6, $this->normalizeText($clauseHeader), 0, 0);
         $this->SetFont('Arial', '', 9);
         
-        // Calcular quantas linhas o texto vai ocupar (estimativa simples)
-        $lines = ceil(strlen($text) / 120); // Aproximadamente 120 caracteres por linha
-        
+        // Se for uma cláusula curta
         if ($lines <= 1) {
-            // Se for uma linha só, usar Cell normal
-            $this->Cell(0, 6, $text, 0, 1);
+            $this->Cell(0, 6, $this->normalizeText($text), 0, 1);
         } else {
-            // Se for mais de uma linha, usar MultiCell
+            // Se for cláusula longa, usar MultiCell com posicionamento adequado
             $this->Ln(6);
-            $this->MultiCell(0, 5, $text, 0, 'J');
+            $this->MultiCell(0, 5, $this->normalizeText($text), 0, 'J');
             $this->Ln(1);
         }
     }
@@ -142,21 +165,26 @@ class ContractPDF extends FPDF {
         $this->Cell(90, 6, str_repeat('_', 40), 0, 1, 'C');
         
         // Títulos
-        $this->Cell(90, 6, $left_title, 0, 0, 'C');
+        $this->Cell(90, 6, $this->normalizeText($left_title), 0, 0, 'C');
         $this->Cell(10, 6, '', 0, 0);
-        $this->Cell(90, 6, $right_title, 0, 1, 'C');
+        $this->Cell(90, 6, $this->normalizeText($right_title), 0, 1, 'C');
         
-        $this->Ln(10);
+        $this->Ln(5);
     }
     
     // Função para criar campo de data
     function CreateDateField($city = 'HAMAMATSU') {
         $this->Ln(5);
-        $this->Cell(25, 6, $city . ',', 0, 0);
-        $this->Cell(20, 6, '_______ DE', 0, 0);
-        $this->Cell(45, 6, '____________________DE', 0, 0);
-        $this->Cell(20, 6, '___________', 0, 1);
+        $this->Cell(25, 6, $this->normalizeText($city . ','), 0, 0);
+        $this->Cell(20, 6, $this->normalizeText('_______ DE'), 0, 0);
+        $this->Cell(45, 6, $this->normalizeText('____________________DE'), 0, 0);
+        $this->Cell(20, 6, $this->normalizeText('___________'), 0, 1);
     }
+}
+
+// Formatar números em ienes
+function formatYen($value) {
+    return '¥' . number_format($value, 0, ',', '.');
 }
 
 // Criar o documento PDF
@@ -205,11 +233,6 @@ $pdf->Ln(5);
 $pdf->CreateSection('VALORES DO LEASING', 0);
 $pdf->Ln(2);
 
-// Formatar números em ienes
-function formatYen($value) {
-    return '¥' . number_format($value, 0, ',', '.');
-}
-
 // Grid para valores do leasing
 $pdf->CreateField('VALOR DO VEICULO', formatYen($contract['vehicle_value']));
 $pdf->CreateField('IMPOSTO DE CONSUMO (10%)', formatYen($contract['consumption_tax']));
@@ -255,9 +278,9 @@ foreach ($clausulas as $index => $clausula) {
 
 // Artigo 1 (tratado separadamente por ser formatado diferente)
 $pdf->SetFont('Arial', 'B', 9);
-$pdf->Cell(30, 6, "ARTIGO 1:", 0, 0);
+$pdf->Cell(30, 6, $pdf->normalizeText("ARTIGO 1:"), 0, 0);
 $pdf->SetFont('Arial', '', 9);
-$pdf->MultiCell(0, 5, "O arrendatário(a) não terá o reembolso do que foi pago (como entrada de veículo, dinheiro em espécie, quantias pagas em dinheiro, etc.) e se compromete a devolver o veículo nas mesmas condições de conservação no ato da aquisição, bem como os acessórios instalados por solicitação do arrendatário(a) e todos os gastos com as despesas (caso seja necessário a arrendatária ter que buscar o veículo).", 0, 'J');
+$pdf->MultiCell(0, 5, $pdf->normalizeText("O arrendatário(a) não terá o reembolso do que foi pago (como entrada de veículo, dinheiro em espécie, quantias pagas em dinheiro, etc.) e se compromete a devolver o veículo nas mesmas condições de conservação no ato da aquisição, bem como os acessórios instalados por solicitação do arrendatário(a) e todos os gastos com as despesas (caso seja necessário a arrendatária ter que buscar o veículo)."), 0, 'J');
 $pdf->Ln(3);
 
 // Campo de assinaturas
@@ -271,7 +294,7 @@ $pdf->AddPage();
 
 // Título da segunda página
 $pdf->SetFont('Arial', 'B', 15);
-$pdf->Cell(0, 10, 'DETALHES DO LEASING', 0, 1, 'C');
+$pdf->Cell(0, 10, $pdf->normalizeText('DETALHES DO LEASING'), 0, 1, 'C');
 $pdf->Ln(5);
 
 // Seção de Informações do Veículo (repetida)
@@ -329,13 +352,16 @@ $pdf->Ln(10);
 $pdf->CreateSection('DADOS PARA DEPOSITO', 0);
 $pdf->Ln(5);
 
-// Informações bancárias
+// Informações bancárias - Aqui não usamos normalizeText para preservar caracteres japoneses
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(0, 6, '静岡銀行 (Shizuoka Ginko) 有田支店 (Aritama) 普通口座 (Futsu) 0408725', 0, 1, 'C');
-$pdf->Cell(0, 6, 'RARAMOS PEREIRA ANDERSON (ラモス ペレイラ アンデルソン)', 0, 1, 'C');
+$bank_info = '静岡銀行 (Shizuoka Ginko) 有田支店 (Aritama) 普通口座 (Futsu) 0408725';
+$account_holder = 'RARAMOS PEREIRA ANDERSON (ラモス ペレイラ アンデルソン)';
+
+$pdf->Cell(0, 6, $bank_info, 0, 1, 'C');
+$pdf->Cell(0, 6, $account_holder, 0, 1, 'C');
 
 // Campo de assinaturas
-$pdf->Ln(20);
+$pdf->Ln(10);
 $pdf->CreateSignature('VENDEDOR', 'COMPRADOR');
 
 // Campo de data
