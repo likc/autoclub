@@ -40,9 +40,35 @@ if (!file_exists($fpdf_path)) {
 
 require_once $fpdf_path;
 
+// Verifica se existe a extensão para japonês do FPDF
+$japanese_font = false;
+if (file_exists('includes/fpdf/makefont/makefont.php') && file_exists('includes/fpdf/font/sjis.php')) {
+    $japanese_font = true;
+    require_once('includes/fpdf/font/sjis.php');
+}
+
 class ContractPDF extends FPDF {
     // Margem ajustada para cláusulas
     protected $clause_left_margin = 30;
+    protected $using_japanese = false;
+    
+    // Construtor personalizado para usar fonte japonesa se disponível
+    function __construct($using_japanese = false) {
+        parent::__construct();
+        $this->using_japanese = $using_japanese;
+        
+        if ($this->using_japanese) {
+            $this->AddSJISFont();
+        }
+    }
+    
+    // Adiciona suporte para fonte SJIS - só será executado se as extensões estiverem disponíveis
+    function AddSJISFont() {
+        if (method_exists($this, 'AddSJISFont')) {
+            // Esta função existe na extensão SJIS do FPDF
+            parent::AddSJISFont();
+        }
+    }
     
     function Header() {
         // Logo (verificar se existe)
@@ -65,8 +91,16 @@ class ContractPDF extends FPDF {
         $this->Cell(0, 10, $this->fixText('Página ') . $this->PageNo() . '/' . $this->AliasNbPages(), 0, 0, 'C');
     }
     
-    // Função para normalização de texto
+    // Versão melhorada da normalização de texto para suportar japonês
     function fixText($text) {
+        // Se usando fonte japonesa, converter para SJIS
+        if ($this->using_japanese) {
+            if (function_exists('mb_convert_encoding')) {
+                return mb_convert_encoding($text, 'SJIS', 'UTF-8');
+            }
+        }
+        
+        // Caso contrário, usar conversão padrão para ISO-8859-1
         if (function_exists('mb_convert_encoding')) {
             return mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8');
         } else if (function_exists('iconv')) {
@@ -101,12 +135,144 @@ class ContractPDF extends FPDF {
         }
     }
     
+    // Função para criar uma tabela tradicional (mantida para compatibilidade)
+    function CreateTable($headers, $data) {
+        // Larguras de coluna
+        $w = array(40, 60, 40, 50);
+        
+        // Cabeçalho
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 9);
+        for($i=0; $i<count($headers); $i++) {
+            $this->Cell($w[$i], 7, $this->fixText($headers[$i]), 1, 0, 'C', true);
+        }
+        $this->Ln();
+        
+        // Dados
+        $this->SetFont('Arial', '', 9);
+        $this->SetFillColor(240, 240, 240);
+        $fill = false;
+        foreach($data as $row) {
+            $this->Cell($w[0], 6, $this->fixText($row[0]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[1], 6, $this->fixText($row[1]), 'LR', 0, 'L', $fill);
+            $this->Cell($w[2], 6, $this->fixText($row[2]), 'LR', 0, 'R', $fill);
+            $this->Cell($w[3], 6, $this->fixText($row[3]), 'LR', 0, 'L', $fill);
+            $this->Ln();
+            $fill = !$fill;
+        }
+        // Linha de fechamento
+        $this->Cell(array_sum($w), 0, '', 'T');
+        $this->Ln(5);
+    }
+    
+    // Nova versão da tabela de pagamentos - formato de grade com 5 colunas
+    function CreatePaymentGrid($contract) {
+        $this->AddPage(); // Começar uma nova página dedicada para pagamentos
+        
+        // Título da página de pagamentos
+        $this->SetFont('Arial', 'B', 15);
+        $this->Cell(0, 10, $this->fixText('CONTRATO DE LEASING'), 0, 1, 'C');
+        $this->Ln(5);
+        
+        // Cabeçalho da relação de pagamentos
+        $this->CreateSection('RELAÇÃO DE PAGAMENTOS', 0);
+        $this->Ln(5);
+        
+        $baseDate = new DateTime($contract['date']);
+        $monthlyValue = formatYen(20000); // Exemplo, ajuste conforme necessário
+        
+        // Configuração da tabela
+        // 5 colunas divididas em 5 conjuntos completos (parcela, vencimento, valor)
+        $colCount = 5;
+        $parcelasTotal = 25;
+        $parcelasPorColuna = 5; // 5 linhas de parcelas
+        
+        // Larguras das colunas
+        $colWidth = array(8, 25, 18); // Nº, Vencimento, Valor
+        $spacing = 2; // Espaçamento entre conjuntos de colunas
+        
+        // Espaço total disponível na página
+        $pageWidth = $this->GetPageWidth() - 20; // 10mm de margem de cada lado
+        
+        // Ajustar as larguras para caber na página
+        $totalWidth = ($colWidth[0] + $colWidth[1] + $colWidth[2]) * $colCount + ($spacing * ($colCount - 1));
+        $ratio = $pageWidth / $totalWidth;
+        
+        if ($ratio < 1) {
+            // Se não couber, redimensionar proporcionalmente
+            for ($i = 0; $i < count($colWidth); $i++) {
+                $colWidth[$i] = $colWidth[$i] * $ratio;
+            }
+        }
+        
+        // Cabeçalho da tabela
+        $this->SetFillColor(200, 200, 200);
+        $this->SetFont('Arial', 'B', 8);
+        
+        // Desenhar o cabeçalho para cada coluna
+        $currentX = 10; // Começar na margem esquerda
+        
+        for ($col = 0; $col < $colCount; $col++) {
+            $this->SetX($currentX);
+            $this->Cell($colWidth[0], 6, $this->fixText('Nº'), 1, 0, 'C', true);
+            $this->Cell($colWidth[1], 6, $this->fixText('VENCIMENTO'), 1, 0, 'C', true);
+            $this->Cell($colWidth[2], 6, $this->fixText('VALOR'), 1, 0, 'C', true);
+            $currentX += $colWidth[0] + $colWidth[1] + $colWidth[2] + $spacing;
+        }
+        $this->Ln();
+        
+        // Dados da tabela
+        $this->SetFont('Arial', '', 8);
+        $this->SetFillColor(240, 240, 240);
+        $fill = false;
+        
+        // Desenhar as linhas de parcelas
+        for ($linha = 0; $linha < $parcelasPorColuna; $linha++) {
+            $currentX = 10;
+            
+            for ($col = 0; $col < $colCount; $col++) {
+                // Calcular o número da parcela
+                $parcela = $linha + ($col * $parcelasPorColuna) + 1;
+                
+                if ($parcela <= $parcelasTotal) {
+                    // Calcular a data de vencimento
+                    $date = clone $baseDate;
+                    $date->modify("+$parcela month");
+                    $formattedDate = $date->format('d/m/Y');
+                    
+                    // Desenhar a célula
+                    $this->SetX($currentX);
+                    $this->Cell($colWidth[0], 6, $parcela . '/25', 1, 0, 'C', $fill);
+                    $this->Cell($colWidth[1], 6, $formattedDate, 1, 0, 'C', $fill);
+                    $this->Cell($colWidth[2], 6, $monthlyValue, 1, 0, 'C', $fill);
+                }
+                
+                $currentX += $colWidth[0] + $colWidth[1] + $colWidth[2] + $spacing;
+            }
+            
+            $this->Ln();
+            $fill = !$fill;
+        }
+        
+        $this->Ln(10);
+        
+        // Seção Dados para Depósito
+        $this->CreateBankData();
+        
+        // Campo de assinaturas
+        $this->Ln(10);
+        $this->CreateSignature('VENDEDOR', 'COMPRADOR');
+        
+        // Campo de data
+        $this->CreateDateField();
+    }
+    
     // Versão melhorada para criar todas as cláusulas em uma página
     function CreateAllClauses($clausulas) {
         // Adicionar uma nova página dedicada para as cláusulas
         $this->AddPage();
         
-        $this->CreateSection('CLAUSULAS CONTRATUAIS', 0);
+        $this->CreateSection('CLÁUSULAS CONTRATUAIS', 0);
         $this->Ln(5);
         
         // Layout melhorado - alinhamento tabular para cláusulas
@@ -202,82 +368,27 @@ class ContractPDF extends FPDF {
         $this->Cell(20, 6, $this->fixText('___________'), 0, 1);
     }
     
-    // Esta função cria a tabela de pagamentos em uma única página
-    function CreatePaymentsTable($payments, $monthly_value, $start_date) {
-        // Forçar nova página para a tabela de pagamentos
-        $this->AddPage();
-        
-        // Título da página
-        $this->SetFont('Arial', 'B', 15);
-        $this->Cell(0, 10, $this->fixText('CONTRATO DE LEASING'), 0, 1, 'C');
+    // Esta função manipula diretamente as coordenadas para os dados bancários
+    function CreateBankData() {
+        $this->Ln(3);
+        $this->SetFont('Arial', 'B', 11);
+        $this->Cell(0, 8, $this->fixText('DADOS PARA DEPÓSITO'), 0, 1, 'L');
         $this->Ln(5);
         
-        // Seção Relação de Pagamentos
-        $this->CreateSection('RELACAO DE PAGAMENTOS', 0);
-        $this->Ln(5);
+        $this->SetFont('Arial', '', 10);
         
-        // Larguras das colunas
-        $w = array(40, 60, 50, 40);
-        
-        // Cabeçalho da tabela
-        $this->SetFillColor(200, 200, 200);
-        $this->SetFont('Arial', 'B', 9);
-        $headers = array('N° DA PARCELA', 'VENCIMENTO', 'VALOR', '');
-        
-        for($i=0; $i<count($headers); $i++) {
-            $this->Cell($w[$i], 7, $this->fixText($headers[$i]), 1, 0, 'C', true);
-        }
-        $this->Ln();
-        
-        // Dados da tabela
-        $this->SetFont('Arial', '', 9);
-        $this->SetFillColor(240, 240, 240);
-        $fill = false;
-        
-        // Data inicial
-        $baseDate = new DateTime($start_date);
-        
-        // Criar linhas da tabela
-        for ($i = 1; $i <= $payments; $i++) {
-            $date = clone $baseDate;
-            $date->modify("+$i month");
-            $formattedDate = $date->format('d/m/Y');
-            
-            $this->Cell($w[0], 6, $i . "/$payments", 1, 0, 'C', $fill);
-            $this->Cell($w[1], 6, $formattedDate, 1, 0, 'C', $fill);
-            $this->Cell($w[2], 6, formatYen($monthly_value), 1, 0, 'R', $fill);
-            $this->Cell($w[3], 6, '', 1, 0, 'C', $fill);
-            $this->Ln();
-            $fill = !$fill;
-        }
-        
-        $this->Ln(10);
-    }
-    
-    // Esta função cria a seção de dados bancários e assinatura final
-    function CreateFinalSection() {
-        // Seção de dados bancários
-        $this->CreateSection('DADOS PARA DEPÓSITO', 0);
-        $this->Ln(5);
-        
-        // Usar imagem com os dados bancários em japonês
+        // Imagem com os dados do banco
         if (file_exists('img/banco_dados.png')) {
+            // Se existir uma imagem com os dados, usa ela em vez do texto
             $this->Image('img/banco_dados.png', null, null, 180);
-        } elseif (file_exists('img/bank_data.jpg')) {
-            $this->Image('img/bank_data.jpg', null, null, 180);
         } else {
-            // Dados bancários em texto
-            $this->SetFont('Arial', '', 10);
-            $this->Cell(0, 6, $this->fixText('静岡銀行 (Shizuoka Ginko) - 有玉支店 (Aritama) - 普通口座 (Futsu) 0408725'), 0, 1, 'C');
-            $this->Cell(0, 6, $this->fixText('RAMOS PEREIRA ANDERSON (ラモス ペレイラ アンデルソン)'), 0, 1, 'C');
+            // Modo alternativo - usa imagem de texto
+            $bank_text = '静岡銀行 (Shizuoka Ginko) - 有玉支店 （Aritama） - 普通口座 (Futsu) 0408725';
+            $name_text = 'RAMOS PEREIRA ANDERSON';
+            
+            $this->Cell(0, 6, $this->fixText($bank_text), 0, 1, 'C');
+            $this->Cell(0, 6, $this->fixText($name_text), 0, 1, 'C');
         }
-        
-        // Campo de assinaturas final
-        $this->Ln(20);
-        $this->CreateSignature('VENDEDOR', 'COMPRADOR');
-        
-        // Campo de data
-        $this->CreateDateField();
     }
 }
 
@@ -289,74 +400,73 @@ function formatYen($value) {
 // Criar imagem com texto em japonês
 function createBankInfoImage() {
     // Verificar se a imagem já existe
-    if (file_exists('img/banco_dados.png') || file_exists('img/bank_data.jpg')) {
+    if (file_exists('img/banco_dados.png')) {
         return true;
     }
     
-    // Se o GD está disponível
-    if (function_exists('imagecreate')) {
-        // Criar uma imagem de texto simples
-        $width = 600;
-        $height = 80;
-        $image = imagecreate($width, $height);
-        
-        // Cores
-        $bg = imagecolorallocate($image, 255, 255, 255);
-        $textcolor = imagecolorallocate($image, 0, 0, 0);
-        
-        // Texto (sem caracteres japoneses)
-        $text1 = 'Shizuoka Ginko - Agencia Aritama - Conta Corrente 0408725';
-        $text2 = 'RAMOS PEREIRA ANDERSON';
-        
-        // Posições
-        $font = 5;
-        $y1 = 30;
-        $y2 = 50;
-        
-        $x1 = ($width - imagefontwidth($font) * strlen($text1)) / 2;
-        $x2 = ($width - imagefontwidth($font) * strlen($text2)) / 2;
-        
-        // Adicionar texto à imagem
-        imagestring($image, $font, $x1, $y1, $text1, $textcolor);
-        imagestring($image, $font, $x2, $y2, $text2, $textcolor);
-        
-        // Garantir que o diretório existe
-        if (!is_dir('img')) {
-            mkdir('img', 0755, true);
-        }
-        
-        // Salvar imagem
-        imagepng($image, 'img/banco_dados.png');
-        imagedestroy($image);
-        
-        return true;
+    // Verificar se temos a extensão GD
+    if (!function_exists('imagecreate')) {
+        return false;
     }
     
-    return false;
+    // Criar uma imagem
+    $width = 800;
+    $height = 80;
+    $image = imagecreate($width, $height);
+    
+    // Cores
+    $bg = imagecolorallocate($image, 255, 255, 255);
+    $textcolor = imagecolorallocate($image, 0, 0, 0);
+    
+    // Texto - incluindo caracteres japoneses
+    $line1 = '静岡銀行 (Shizuoka Ginko) - 有玉支店 （Aritama） - 普通口座 (Futsu) 0408725';
+    $line2 = 'RARAMOS PEREIRA ANDERSON';
+    
+    // Adicionar texto
+    $font = 5; // Fonte built-in do GD
+    $y_pos1 = 30;
+    $y_pos2 = 50;
+    
+    // Centralizar texto
+    $x_pos1 = ($width - imagefontwidth($font) * strlen($line1)) / 2;
+    $x_pos2 = ($width - imagefontwidth($font) * strlen($line2)) / 2;
+    
+    imagestring($image, $font, $x_pos1, $y_pos1, $line1, $textcolor);
+    imagestring($image, $font, $x_pos2, $y_pos2, $line2, $textcolor);
+    
+    // Salvar imagem
+    if (!is_dir('img')) {
+        mkdir('img', 0755, true);
+    }
+    
+    imagepng($image, 'img/banco_dados.png');
+    imagedestroy($image);
+    
+    return true;
 }
 
 // Tentar criar a imagem com as informações bancárias
 createBankInfoImage();
 
 // Criar o documento PDF
-$pdf = new ContractPDF();
+$pdf = new ContractPDF($japanese_font);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->SetAutoPageBreak(true, 25);
 
 // Seção de Informações do Cliente
-$pdf->CreateSection('INFORMACOES DO CLIENTE', 0);
+$pdf->CreateSection('INFORMAÇÕES DO CLIENTE', 0);
 $pdf->Ln(2);
 
 // Grid de 2 colunas para informações do cliente
 $pdf->CreateField('NOME COMPLETO', mb_strtoupper($contract['client_name']));
-$pdf->CreateField('ENDERECO', mb_strtoupper($contract['client_address']));
+$pdf->CreateField('ENDEREÇO', mb_strtoupper($contract['client_address']));
 $pdf->CreateField('TELEFONE 1', $contract['client_phone1']);
 $pdf->CreateField('TELEFONE 2', $contract['client_phone2']);
 
 // Seção de Informações do Financiamento
 $pdf->Ln(5);
-$pdf->CreateSection('INFORMACOES DO FINANCIAMENTO', 0);
+$pdf->CreateSection('INFORMAÇÕES DO FINANCIAMENTO', 0);
 $pdf->Ln(2);
 
 // Grid para informações do financiamento
@@ -367,13 +477,13 @@ $pdf->CreateField('FORMA DE PAGAMENTO', mb_strtoupper($contract['payment_method'
 
 // Seção de Informações do Veículo
 $pdf->Ln(5);
-$pdf->CreateSection('INFORMACOES DO VEICULO', 0);
+$pdf->CreateSection('INFORMAÇÕES DO VEÍCULO', 0);
 $pdf->Ln(2);
 
 // Grid para informações do veículo
 $pdf->CreateField('NOME', mb_strtoupper($contract['vehicle_name']));
 $pdf->CreateField('PLACA', mb_strtoupper($contract['vehicle_plate']));
-$pdf->CreateField('ANO DE FABRICACAO', $contract['vehicle_year']);
+$pdf->CreateField('ANO DE FABRICAÇÃO', $contract['vehicle_year']);
 $pdf->CreateField('CHASSI', mb_strtoupper($contract['vehicle_chassis']));
 $pdf->CreateField('KATASHIKI', mb_strtoupper($contract['vehicle_katashiki']));
 $pdf->CreateField('COR', mb_strtoupper($contract['vehicle_color']));
@@ -385,12 +495,12 @@ $pdf->CreateSection('VALORES DO LEASING', 0);
 $pdf->Ln(2);
 
 // Grid para valores do leasing
-$pdf->CreateField('VALOR DO VEICULO', formatYen($contract['vehicle_value']));
+$pdf->CreateField('VALOR DO VEÍCULO', formatYen($contract['vehicle_value']));
 $pdf->CreateField('IMPOSTO DE CONSUMO (10%)', formatYen($contract['consumption_tax']));
 $pdf->CreateField('GPS', formatYen($contract['gps_value']));
 $pdf->CreateField('SHAKEN', formatYen($contract['shaken_value']));
 $pdf->CreateField('IMPOSTO ANUAL (ZEIKIN)', formatYen($contract['annual_tax']));
-$pdf->CreateField('TRANSFERENCIA E ENTREGA', formatYen($contract['transfer_delivery']));
+$pdf->CreateField('TRANSFERÊNCIA E ENTREGA', formatYen($contract['transfer_delivery']));
 $pdf->CreateField('VALOR DO KAITORI', formatYen($contract['kaitori_value']));
 $pdf->CreateField('TOTAL', formatYen($contract['total_value']));
 
@@ -430,67 +540,9 @@ $pdf->CreateSignature('VENDEDOR', 'COMPRADOR');
 // Campo de data
 $pdf->CreateDateField();
 
-// Segunda página para detalhes do leasing e pagamentos
-$pdf->AddPage();
-
-// Título da segunda página
-$pdf->SetFont('Arial', 'B', 15);
-$pdf->Cell(0, 10, $pdf->fixText('DETALHES DO LEASING'), 0, 1, 'C');
-$pdf->Ln(5);
-
-// Função auxiliar para extrair a marca do carro pelo nome
-function getCarBrand($carName) {
-    $brands = array(
-        'TOYOTA', 'HONDA', 'NISSAN', 'MAZDA', 'SUBARU', 'MITSUBISHI', 'SUZUKI', 'DAIHATSU',
-        'LEXUS', 'INFINITY', 'ACURA', 'BMW', 'MERCEDES', 'AUDI', 'VOLKSWAGEN', 'FORD', 
-        'CHEVROLET', 'HYUNDAI', 'KIA', 'FIAT', 'PEUGEOT', 'RENAULT', 'VOLVO', 'JAGUAR',
-        'LAND ROVER', 'PORSCHE', 'FERRARI', 'LAMBORGHINI', 'MASERATI', 'BENTLEY', 'ROLLS ROYCE'
-    );
-    
-    $carName = strtoupper($carName);
-    foreach ($brands as $brand) {
-        if (strpos($carName, $brand) !== false) {
-            return $brand;
-        }
-    }
-    
-    // Se não encontrar a marca, retornar as primeiras palavras do nome
-    $words = explode(' ', $carName);
-    return $words[0] . (isset($words[1]) ? ' ' . $words[1] : '');
-}
-
-// Seção de Informações do Veículo (repetida)
-$pdf->CreateSection('INFORMACOES DO VEICULO', 0);
-$pdf->Ln(2);
-
-// Grid para informações do veículo na segunda página
-$pdf->CreateField('MODELO DO CARRO', mb_strtoupper($contract['vehicle_name']));
-$pdf->CreateField('MARCA', getCarBrand($contract['vehicle_name']));
-$pdf->CreateField('PLACA', mb_strtoupper($contract['vehicle_plate']));
-$pdf->CreateField('ANO DE FABRICACAO', $contract['vehicle_year']);
-$pdf->CreateField('CHASSI', mb_strtoupper($contract['vehicle_chassis']));
-$pdf->CreateField('KATASHIKI', mb_strtoupper($contract['vehicle_katashiki']));
-$pdf->CreateField('COR', mb_strtoupper($contract['vehicle_color']));
-$pdf->CreateField('QUILOMETRAGEM', number_format($contract['vehicle_mileage'], 0, ',', '.'));
-
-// Seção de Informações do Leasing
-$pdf->Ln(5);
-$pdf->CreateSection('INFORMACOES DO LEASING', 0);
-$pdf->Ln(2);
-
-// Grid para informações do leasing
-$pdf->CreateField('DATA', date('d/m/Y', strtotime($contract['date'])));
-$pdf->CreateField('VALOR TOTAL', formatYen($contract['total_value']));
-$pdf->CreateField('VALOR DA ENTRADA', formatYen(0)); // Exemplo, ajuste conforme necessário
-$pdf->CreateField('VALOR DO KAITORI', formatYen($contract['kaitori_value']));
-$pdf->CreateField('VALOR FINANCIADO', formatYen($contract['total_value'])); // Exemplo, ajuste conforme necessário
-
-// Criar tabela de pagamentos em uma página separada
-$monthly_value = 20000; // Exemplo, ajuste conforme necessário
-$pdf->CreatePaymentsTable(25, $monthly_value, $contract['date']);
-
-// Criar seção final com dados bancários e assinaturas
-$pdf->CreateFinalSection();
+// Usar o método de grade de pagamentos em uma página separada
+// com o mesmo layout visto na imagem de exemplo
+$pdf->CreatePaymentGrid($contract);
 
 // Gerar o PDF
 if ($action == 'download') {
