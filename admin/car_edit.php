@@ -186,14 +186,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
             }
             
-// Confirmar transação
-$conn->commit();
+            // Confirmar transação
+            $conn->commit();
 
-// Registrar atividade
-log_admin_activity("Editou o veículo: " . $model . " (" . $year . ")", "edit", $car_id, "car");
+            // Registrar atividade
+            log_admin_activity("Editou o veículo: " . $model . " (" . $year . ")", "edit", $car_id, "car");
 
-set_alert('success', 'Veículo atualizado com sucesso!');
-redirect('cars.php');
+            set_alert('success', 'Veículo atualizado com sucesso!');
+            redirect('cars.php');
         } catch (Exception $e) {
             // Reverter transação em caso de erro
             $conn->rollback();
@@ -388,6 +388,13 @@ $conn->close();
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                             <a href="cars.php" class="btn btn-default">Cancelar</a>
+                            
+                            <!-- Botão para gerar contrato -->
+                            <?php if (is_admin() && isset($car_id)): ?>
+                            <a href="car_to_contract.php?car_id=<?php echo $car_id; ?>" class="btn btn-info ml-2">
+                                <i class="fas fa-file-contract"></i> Gerar Contrato
+                            </a>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>

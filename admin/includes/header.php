@@ -184,6 +184,33 @@ $is_admin = is_admin_role();
                             </ul>
                         </li>
                         
+                        <!-- Nova seção de contratos -->
+                        <?php if ($is_admin): ?>
+                        <li class="nav-item <?php echo in_array($current_page, ['contracts.php', 'contract_edit.php', 'contract_view.php']) ? 'menu-open' : ''; ?>">
+                            <a href="#" class="nav-link <?php echo in_array($current_page, ['contracts.php', 'contract_edit.php', 'contract_view.php']) ? 'active' : ''; ?>">
+                                <i class="nav-icon fas fa-file-contract"></i>
+                                <p>
+                                    Contratos
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="contracts.php" class="nav-link <?php echo $current_page == 'contracts.php' ? 'active' : ''; ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Listar Todos</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="contract_edit.php" class="nav-link <?php echo $current_page == 'contract_edit.php' ? 'active' : ''; ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Novo Contrato</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <?php endif; ?>
+                        
                         <li class="nav-item <?php echo in_array($current_page, ['settings.php', 'site_settings.php']) ? 'menu-open' : ''; ?>">
                             <a href="#" class="nav-link <?php echo in_array($current_page, ['settings.php', 'site_settings.php']) ? 'active' : ''; ?>">
                                 <i class="nav-icon fas fa-cog"></i>
