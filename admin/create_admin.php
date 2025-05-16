@@ -10,6 +10,12 @@ $admin_count = $result->fetch_assoc()['count'];
 // Se já existir admin, apenas admins logados podem criar novos admins
 if ($admin_count > 0) {
     check_login();
+    
+    // Verificar se é admin para acessar a página
+    if (isset($_SESSION['admin_id']) && !is_admin()) {
+        set_alert('danger', 'Você não tem permissão para criar administradores.');
+        redirect('dashboard.php');
+    }
 }
 
 // Processar o formulário
@@ -17,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = sanitize($_POST['username']);
     $password = $_POST['password'];
     $name = sanitize($_POST['name']);
+    $role = sanitize($_POST['role']); // Novo campo de cargo
     
     // Validação básica
     $errors = [];
@@ -35,6 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Nome é obrigatório.";
     }
     
+    // Validar o cargo (deve ser 'admin' ou 'moderator')
+    if ($role !== 'admin' && $role !== 'moderator') {
+        $errors[] = "Cargo inválido selecionado.";
+    }
+    
     // Verificar se o nome de usuário já existe
     $stmt = $conn->prepare("SELECT id FROM admins WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -50,25 +62,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Hash da senha
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
         
-        $stmt = $conn->prepare("INSERT INTO admins (username, password, name) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $password_hash, $name);
+        $stmt = $conn->prepare("INSERT INTO admins (username, password, name, role) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $username, $password_hash, $name, $role);
         
         if ($stmt->execute()) {
-    $success = "Administrador criado com sucesso!";
-    
-    // Registrar atividade se estiver logado
-    if (is_logged_in()) {
-        log_admin_activity("Criou novo administrador: " . $name, "add", $conn->insert_id, "admin");
-    }
-    
-    // Se não houver admin logado, redirecionar para o login
-    if (!is_logged_in()) {
-        set_alert('success', 'Sua conta de administrador foi criada. Agora você pode fazer login.');
-        redirect('login.php');
-    }
-} else {
-    $errors[] = "Erro ao criar administrador: " . $conn->error;
-}
+            $success = "Usuário criado com sucesso!";
+            
+            // Registrar atividade se estiver logado
+            if (is_logged_in()) {
+                $role_text = ($role === 'admin') ? 'administrador' : 'moderador';
+                log_admin_activity("Criou novo " . $role_text . ": " . $name, "add", $conn->insert_id, "admin");
+            }
+            
+            // Se não houver admin logado, redirecionar para o login
+            if (!is_logged_in()) {
+                set_alert('success', 'Sua conta de administrador foi criada. Agora você pode fazer login.');
+                redirect('login.php');
+            }
+        } else {
+            $errors[] = "Erro ao criar usuário: " . $conn->error;
+        }
     }
     
     $conn->close();
@@ -80,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Administrador - <?php echo SITE_NAME; ?></title>
+    <title>Criar Usuário - <?php echo SITE_NAME; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
@@ -147,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 500;
         }
         
-        input {
+        input, select {
             width: 100%;
             padding: 12px 15px;
             font-size: 16px;
@@ -158,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transition: all 0.3s ease;
         }
         
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(214, 156, 30, 0.3);
@@ -218,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img src="../img/logo.png" alt="<?php echo SITE_NAME; ?>">
         </div>
         
-        <h1>Criar Novo Administrador</h1>
+        <h1>Criar Novo Usuário</h1>
         
         <?php if (isset($errors) && !empty($errors)): ?>
             <div class="alert alert-danger">
@@ -253,7 +266,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" id="name" name="name" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
             </div>
             
-            <button type="submit">Criar Administrador</button>
+            <div class="form-group">
+                <label for="role">Cargo</label>
+                <select id="role" name="role" required>
+                    <option value="admin" <?php echo (isset($_POST['role']) && $_POST['role'] === 'admin') ? 'selected' : ''; ?>>Administrador</option>
+                    <option value="moderator" <?php echo (isset($_POST['role']) && $_POST['role'] === 'moderator') ? 'selected' : ''; ?>>Moderador</option>
+                </select>
+            </div>
+            
+            <button type="submit">Criar Usuário</button>
         </form>
         
         <?php if (is_logged_in()): ?>

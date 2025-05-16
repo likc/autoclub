@@ -1,6 +1,38 @@
 <?php
 // Determinar a página atual para destacar no menu
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Verificar se o usuário é admin
+function is_admin_role() {
+    if (!isset($_SESSION['admin_id'])) {
+        return false;
+    }
+    
+    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if ($conn->connect_error) {
+        return false;
+    }
+    
+    $admin_id = $_SESSION['admin_id'];
+    $stmt = $conn->prepare("SELECT role FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 1) {
+        $admin = $result->fetch_assoc();
+        $is_admin = ($admin['role'] === 'admin');
+        $stmt->close();
+        $conn->close();
+        return $is_admin;
+    }
+    
+    $stmt->close();
+    $conn->close();
+    return false;
+}
+
+$is_admin = is_admin_role();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -112,7 +144,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['admin_name']); ?>&background=d69c1e&color=fff" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block"><?php echo $_SESSION['admin_name']; ?></a>
+                        <a href="#" class="d-block">
+                            <?php echo $_SESSION['admin_name']; ?>
+                            <small class="d-block text-muted"><?php echo $is_admin ? 'Administrador' : 'Moderador'; ?></small>
+                        </a>
                     </div>
                 </div>
 
@@ -164,6 +199,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                         <p>Meu Perfil</p>
                                     </a>
                                 </li>
+                                <?php if ($is_admin): ?>
                                 <li class="nav-item">
                                     <a href="site_settings.php" class="nav-link <?php echo $current_page == 'site_settings.php' ? 'active' : ''; ?>">
                                         <i class="far fa-circle nav-icon"></i>
@@ -171,17 +207,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                     </a>
                                 </li>
 								<li class="nav-item">
-            <a href="admins.php" class="nav-link <?php echo $current_page == 'admins.php' ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Administradores</p>
-            </a>
-        </li>
-		<li class="nav-item">
-    <a href="admin_logs.php" class="nav-link <?php echo $current_page == 'admin_logs.php' ? 'active' : ''; ?>">
-        <i class="nav-icon fas fa-history"></i>
-        <p>Log de Atividades</p>
-    </a>
-</li>
+                                    <a href="admins.php" class="nav-link <?php echo $current_page == 'admins.php' ? 'active' : ''; ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Administradores</p>
+                                    </a>
+                                </li>
+		                        <li class="nav-item">
+                                    <a href="admin_logs.php" class="nav-link <?php echo $current_page == 'admin_logs.php' ? 'active' : ''; ?>">
+                                        <i class="nav-icon fas fa-history"></i>
+                                        <p>Log de Atividades</p>
+                                    </a>
+                                </li>
+                                <?php endif; ?>
                             </ul>
                         </li>
                     </ul>

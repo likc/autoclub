@@ -68,6 +68,40 @@ function check_login() {
     }
 }
 
+// Função para verificar se o usuário é um admin
+function is_admin() {
+    if (!is_logged_in()) {
+        return false;
+    }
+    
+    $conn = db_connect();
+    $admin_id = $_SESSION['admin_id'];
+    
+    $stmt = $conn->prepare("SELECT role FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 1) {
+        $admin = $result->fetch_assoc();
+        $stmt->close();
+        $conn->close();
+        return $admin['role'] === 'admin';
+    }
+    
+    $stmt->close();
+    $conn->close();
+    return false;
+}
+
+// Função para verificar se o usuário tem permissão de admin
+function check_admin_permission() {
+    if (!is_admin()) {
+        set_alert('danger', 'Você não tem permissão para acessar esta página.');
+        redirect('dashboard.php');
+    }
+}
+
 // Função para gerar mensagem de alerta
 function set_alert($type, $message) {
     $_SESSION['alert'] = [

@@ -2,9 +2,59 @@
 session_start();
 require_once 'config.php';
 check_login();
+check_admin_permission();
 
 $conn = db_connect();
 $current_admin_id = $_SESSION['admin_id'];
+
+// Processar alteração de cargo
+if (isset($_GET['action']) && $_GET['action'] === 'change_role' && isset($_GET['id']) && isset($_GET['role'])) {
+    $admin_id = (int)$_GET['id'];
+    $new_role = sanitize($_GET['role']);
+    
+    // Verificar se o admin está tentando mudar seu próprio cargo
+    if ($admin_id === $current_admin_id) {
+        set_alert('danger', 'Você não pode alterar seu próprio cargo!');
+        redirect('admins.php');
+    }
+    
+    // Validar o novo cargo
+    if ($new_role !== 'admin' && $new_role !== 'moderator') {
+        set_alert('danger', 'Cargo inválido!');
+        redirect('admins.php');
+    }
+    
+    // Obter o nome do admin para o log
+    $stmt = $conn->prepare("SELECT name, role FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $admin_data = $result->fetch_assoc();
+    $admin_name = $admin_data['name'];
+    $current_role = $admin_data['role'];
+    
+    // Verificar se o cargo está realmente mudando
+    if ($current_role === $new_role) {
+        set_alert('info', 'O usuário já possui este cargo.');
+        redirect('admins.php');
+    }
+    
+    // Atualizar o cargo
+    $stmt = $conn->prepare("UPDATE admins SET role = ? WHERE id = ?");
+    $stmt->bind_param("si", $new_role, $admin_id);
+    
+    if ($stmt->execute()) {
+        // Registrar atividade
+        $role_text = ($new_role === 'admin') ? 'administrador' : 'moderador';
+        log_admin_activity("Alterou o cargo de {$admin_name} para {$role_text}", "edit", $admin_id, "admin");
+        
+        set_alert('success', "Cargo de {$admin_name} alterado para {$role_text} com sucesso!");
+    } else {
+        set_alert('danger', 'Erro ao alterar cargo: ' . $conn->error);
+    }
+    
+    redirect('admins.php');
+}
 
 // Processar exclusão de administrador
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
@@ -17,26 +67,42 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     }
     
     // Verificar se é o último administrador
-    $count_query = $conn->query("SELECT COUNT(*) as total FROM admins");
-    $admin_count = $count_query->fetch_assoc()['total'];
+    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM admins WHERE role = 'admin'");
+    $stmt->execute();
+    $admin_count = $stmt->get_result()->fetch_assoc()['total'];
     
-    if ($admin_count <= 1) {
+    // Verificar o cargo do usuário a ser excluído
+    $stmt = $conn->prepare("SELECT role FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $admin_role = $result->fetch_assoc()['role'];
+    
+    // Se for o último administrador, não pode excluir
+    if ($admin_count <= 1 && $admin_role === 'admin') {
         set_alert('danger', 'Não é possível excluir o último administrador do sistema!');
         redirect('admins.php');
     }
+    
+    // Obter o nome do administrador para o log
+    $stmt = $conn->prepare("SELECT name FROM admins WHERE id = ?");
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $admin_name = $result->fetch_assoc()['name'];
     
     // Excluir o administrador
     $stmt = $conn->prepare("DELETE FROM admins WHERE id = ?");
     $stmt->bind_param("i", $admin_id);
     
-if ($stmt->execute()) {
-    // Registrar atividade
-    log_admin_activity("Excluiu o administrador: " . $admin_name, "delete", $admin_id, "admin");
-    
-    set_alert('success', 'Administrador excluído com sucesso!');
-} else {
-    set_alert('danger', 'Erro ao excluir administrador: ' . $conn->error);
-}
+    if ($stmt->execute()) {
+        // Registrar atividade
+        log_admin_activity("Excluiu o administrador: " . $admin_name, "delete", $admin_id, "admin");
+        
+        set_alert('success', 'Administrador excluído com sucesso!');
+    } else {
+        set_alert('danger', 'Erro ao excluir administrador: ' . $conn->error);
+    }
     
     redirect('admins.php');
 }
@@ -54,12 +120,12 @@ $conn->close();
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Gerenciar Administradores</h1>
+                <h1 class="m-0">Gerenciar Usuários</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Administradores</li>
+                    <li class="breadcrumb-item active">Usuários</li>
                 </ol>
             </div>
         </div>
@@ -72,7 +138,7 @@ $conn->close();
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Lista de Administradores</h3>
+                        <h3 class="card-title">Lista de Usuários</h3>
                         
                         <div class="card-tools">
                             <a href="create_admin.php" class="btn btn-primary btn-sm">
@@ -88,6 +154,7 @@ $conn->close();
                                     <th>ID</th>
                                     <th>Nome de Usuário</th>
                                     <th>Nome</th>
+                                    <th>Cargo</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -98,9 +165,32 @@ $conn->close();
                                         <td><?php echo htmlspecialchars($admin['username']); ?></td>
                                         <td><?php echo htmlspecialchars($admin['name']); ?></td>
                                         <td>
+                                            <?php if ($admin['role'] === 'admin'): ?>
+                                                <span class="badge badge-primary">Administrador</span>
+                                            <?php else: ?>
+                                                <span class="badge badge-secondary">Moderador</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
                                             <?php if ($admin['id'] == $current_admin_id): ?>
                                                 <span class="badge badge-info">Usuário Atual</span>
                                             <?php else: ?>
+                                                <!-- Botão para mudar cargo -->
+                                                <?php if ($admin['role'] === 'admin'): ?>
+                                                    <a href="admins.php?action=change_role&id=<?php echo $admin['id']; ?>&role=moderator" 
+                                                       class="btn btn-warning btn-sm" 
+                                                       onclick="return confirm('Tem certeza que deseja alterar o cargo deste usuário para Moderador?');">
+                                                        <i class="fas fa-user-shield"></i> Mudar para Moderador
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="admins.php?action=change_role&id=<?php echo $admin['id']; ?>&role=admin" 
+                                                       class="btn btn-info btn-sm" 
+                                                       onclick="return confirm('Tem certeza que deseja alterar o cargo deste usuário para Administrador?');">
+                                                        <i class="fas fa-user-tie"></i> Mudar para Administrador
+                                                    </a>
+                                                <?php endif; ?>
+                                                
+                                                <!-- Botão de exclusão -->
                                                 <button type="button" class="btn btn-danger btn-sm" 
                                                         data-toggle="modal" 
                                                         data-target="#deleteAdminModal<?php echo $admin['id']; ?>">
@@ -118,7 +208,7 @@ $conn->close();
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p>Tem certeza que deseja excluir o administrador <strong><?php echo htmlspecialchars($admin['name']); ?></strong>?</p>
+                                                                <p>Tem certeza que deseja excluir o usuário <strong><?php echo htmlspecialchars($admin['name']); ?></strong>?</p>
                                                                 <p class="text-danger">Esta ação não pode ser desfeita!</p>
                                                             </div>
                                                             <div class="modal-footer">
@@ -135,7 +225,7 @@ $conn->close();
                                 
                                 <?php if (empty($admins)): ?>
                                     <tr>
-                                        <td colspan="4" class="text-center">Nenhum administrador encontrado.</td>
+                                        <td colspan="5" class="text-center">Nenhum usuário encontrado.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

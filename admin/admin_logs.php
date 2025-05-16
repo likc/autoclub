@@ -2,6 +2,7 @@
 session_start();
 require_once 'config.php';
 check_login();
+check_admin_permission(); // Permitido apenas para Admin
 
 $conn = db_connect();
 

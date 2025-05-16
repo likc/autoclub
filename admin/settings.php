@@ -12,6 +12,9 @@ $stmt->bind_param("i", $admin_id);
 $stmt->execute();
 $admin = $stmt->get_result()->fetch_assoc();
 
+// Verificar se o usuário é admin
+$is_admin = ($admin['role'] === 'admin');
+
 // Processar formulário de atualização do perfil
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_profile') {
     $name = sanitize($_POST['name']);
@@ -140,6 +143,10 @@ $conn->close();
                                 <label for="username">Nome de Usuário</label>
                                 <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>" required>
                             </div>
+                            <div class="form-group">
+                                <label for="role">Cargo</label>
+                                <input type="text" class="form-control" value="<?php echo ($admin['role'] === 'admin') ? 'Administrador' : 'Moderador'; ?>" readonly>
+                            </div>
                             <hr>
                             <h5>Alterar Senha</h5>
                             <p class="text-muted small">Deixe em branco para manter a senha atual</p>
@@ -166,7 +173,8 @@ $conn->close();
             
             <!-- Informações e Links Úteis -->
             <div class="col-md-6">
-                <!-- Link para criar novo administrador -->
+                <?php if ($is_admin): ?>
+                <!-- Link para criar novo administrador (apenas para admins) -->
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Gerenciar Administradores</h3>
@@ -179,7 +187,7 @@ $conn->close();
                     </div>
                 </div>
                 
-                <!-- Link para configurações do site -->
+                <!-- Link para configurações do site (apenas para admins) -->
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Configurações do Site</h3>
@@ -191,8 +199,9 @@ $conn->close();
                         </a>
                     </div>
                 </div>
+                <?php endif; ?>
                 
-                <!-- Informação sobre a sessão -->
+                <!-- Informação sobre a sessão (para todos os usuários) -->
                 <div class="card card-info">
                     <div class="card-header">
                         <h3 class="card-title">Informações da Sessão</h3>
@@ -200,7 +209,8 @@ $conn->close();
                     <div class="card-body">
                         <p><strong>Usuário:</strong> <?php echo htmlspecialchars($admin['username']); ?></p>
                         <p><strong>Nome:</strong> <?php echo htmlspecialchars($admin['name']); ?></p>
-                        <p><strong>ID do Administrador:</strong> <?php echo $admin_id; ?></p>
+                        <p><strong>Cargo:</strong> <?php echo ($admin['role'] === 'admin') ? 'Administrador' : 'Moderador'; ?></p>
+                        <p><strong>ID:</strong> <?php echo $admin_id; ?></p>
                         <hr>
                         <a href="logout.php" class="btn btn-danger">
                             <i class="fas fa-sign-out-alt"></i> Sair do Sistema
